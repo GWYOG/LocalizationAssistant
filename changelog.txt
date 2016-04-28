@@ -1,0 +1,13 @@
+#LocalizationAssistant v1.0.1    2016/4/28
+Normalize the names of the classes and variables, appreciating @3TUSK
+Clean up the code: remove some useless comments and all the unused imports
+Clean up the code: remove all the warnings from eclipse
+Normalize the project: use pers.jjn.localizationassistant package instead of the default one
+Update README.md
+Add changelog.txt
+
+#LpcalizationAssistant v1.0    2016/4/27
+Initial commits: create this repository
+Initial Update: update local source codes to github, with LA v1.0
+Update README.md 
+Initial release: release LA v1.0 
