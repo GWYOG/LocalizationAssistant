@@ -303,7 +303,7 @@ public class FileModifier {
 	  	    while((str = br.readLine()) != null) {
 	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1)
 		    	{
-		    		str1 = str.substring(0,str.indexOf('='));	
+		    		str1 = str.substring(0,str.indexOf('=')).toLowerCase();	
 		    		str2 = str.substring(str.indexOf('=')+1);
 		    		hashtable.put(str1,str2);
 		    	}
@@ -337,7 +337,7 @@ public class FileModifier {
 	  	    while((str = br.readLine()) != null) {
 	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1)
 		    	{
-		    		str1 = str.substring(0,str.indexOf('='));	
+		    		str1 = str.substring(0,str.indexOf('=')).toLowerCase();	
 		    		if(hashtable.containsKey(str1))
 		    		{
 		    			osw.write(str1 + "=" + hashtable.get(str1));
