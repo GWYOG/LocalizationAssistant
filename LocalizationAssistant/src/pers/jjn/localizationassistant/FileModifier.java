@@ -37,6 +37,7 @@ public class FileModifier {
 	private String sTo; 
 	private String sInterval;
 	private String sAdd;
+	private String sRemoveFlag;
 	private String []rowNumberSplit;
 	private String []specialIgnoreSymbol;
 	private int updateType;
@@ -67,6 +68,14 @@ public class FileModifier {
 		this.fileInput3 = fileInput3;
 		this.fileOutput = fileOutput;
 		this.updateType = updateType;
+	}
+	
+	public FileModifier(MainFrame parentFrame,String fileInput1,String fileOutput,String sRemoveFlag,int flag){
+		this.parentFrame = parentFrame;
+		this.fileInput1 = fileInput1;
+		this.fileOutput = fileOutput;
+		this.sRemoveFlag = sRemoveFlag;
+		this.updateType = flag;
 	}
 	
 	//输入一个int型参数，判断它是否在用户给定的操作行数范围内：不在的话返回-1，在的话返回该行数，如果用户未置顶操作行数的话，默认对所有行操作，此时返回0
@@ -110,7 +119,7 @@ public class FileModifier {
 	}
 	
 	//LA的第一个功能，条件替换
-	public void functionReplace(){
+	public void functionConditionalReplace(){
 		int lineNumber = 1;
 		 MessageWindow mw = new MessageWindow(parentFrame,"处理中","",0);
 		try{
@@ -126,7 +135,7 @@ public class FileModifier {
 		    fos = new FileOutputStream(file);
 		    osw = new OutputStreamWriter(fos,"UTF-8");
 	  	    while((str = br.readLine()) != null) {
-	  	    	if(str.length()!=0 && str.charAt(0) != '#' && verifyLineNumber(lineNumber) >= 0 && str.indexOf('=')!=-1)
+	  	    	if(str.length()!=0 && str.charAt(0) != '#' && verifyLineNumber(lineNumber) >= 0 && str.indexOf('=')!=-1 && str.indexOf('=')!=str.length()-1)
 		    	{
 		    		str1 = str.substring(str.indexOf('=')+1);	
 		    		String str2,str3="";
@@ -213,7 +222,7 @@ public class FileModifier {
 		    fos = new FileOutputStream(file);
 		    osw = new OutputStreamWriter(fos,"UTF-8");
 	  	    while((str = br.readLine()) != null) {
-	  	    	if(str.length()!=0 && str.charAt(0) != '#' && verifyLineNumber(lineNumber) >= 0 && str.indexOf('=')!=-1)
+	  	    	if(str.length()!=0 && str.charAt(0) != '#' && verifyLineNumber(lineNumber) >= 0 && str.indexOf('=')!=-1 && str.indexOf('=')!=str.length()-1)
 		    	{
 		    		str1 = str.substring(str.indexOf('=')+1);	
 		    		String str2="";
@@ -496,5 +505,65 @@ public class FileModifier {
 		    }
 		return 0;
 	}
+	
+	//LA的第四个功能，逐行条件清理
+		public void functionConditionalRemove(){
+			MessageWindow mw = new MessageWindow(parentFrame,"处理中","",0);
+			try{
+				String str = "";
+				String str1 = "";
+			    fis = new FileInputStream(fileInput1);
+			    isr = new InputStreamReader(fis,"UTF-8");
+		  	    br = new BufferedReader(isr);
+			    file = new File(fileOutput);
+			    if(!file.exists()){
+			    	file.createNewFile();
+			    }
+			    fos = new FileOutputStream(file);
+			    osw = new OutputStreamWriter(fos,"UTF-8");
+		  	    while((str = br.readLine()) != null) {
+		  	    	if(updateType == 0)
+			  	    	if(str.length()!=0 && str.indexOf(sRemoveFlag)!=-1)
+				    		str1 = str.substring(0,str.indexOf(sRemoveFlag));	
+			  	    	else
+			  	    		str1 = str;
+		  	    	else
+			  	    	if(str.length()!=0 && str.indexOf(sRemoveFlag)!=-1 && (str.indexOf(sRemoveFlag)+sRemoveFlag.length()<str.length()))
+					    	str1 = str.substring(0,str.indexOf(sRemoveFlag)+sRemoveFlag.length());	
+			  	    	else
+			  	    		str1 = str;
+	  	    		osw.write(str1);
+	  	    		osw.write("\n");
+			    }
+			    }catch(FileNotFoundException e){
+					 new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
+					 return;
+			    }catch(IOException e){
+					 new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
+					 return;
+			    }finally{	 
+			    	try{
+			    		if(bw != null)
+				    		bw.flush();
+			    		br.close();   
+			    		isr.close();      
+			    		fis.close();
+			    		osw.close();
+			    		fos.close();
+			    		mw.close();
+			    	}catch(IOException e){ 
+			    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
+			    		return;
+			    	}
+			    }
+			try{
+				Thread.sleep(1000);}
+			catch(InterruptedException e){
+				e.printStackTrace();
+				new MessageWindow(parentFrame,"错误！","错误，未知错误！",-1);
+				return;
+			}
+			new MessageWindow(parentFrame,"完成","Done!",1);
+		}
 }
 

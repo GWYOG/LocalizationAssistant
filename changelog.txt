@@ -1,6 +1,11 @@
+#LocalizationAssistant v1.2    2016/5/4
+New function: conditional remove, details are in README.md
+Fix a potential ArrayOutOfBound bug
+New release: release LA v1.2
+
 #LocalizationAssistant v1.1    2016/5/2
 The "updateLocalization" function of LA now totally ignores the case-sensitive scenario(e.g. "xxx.xx.x.Copper.name = Copper" and "xxx.xx.x.copper.name = copper" are regarded as the same entry).
-release: release LA v1.1
+New release: release LA v1.1
 
 #LocalizationAssistant v1.0.1    2016/4/28
 Normalize the names of the classes and variables, appreciating @3TUSK

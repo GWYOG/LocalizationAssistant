@@ -10,6 +10,7 @@ import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -25,31 +26,36 @@ public class MainFrame extends JFrame implements ActionListener{
 	 */
 	
 	private static final long serialVersionUID = 1L;
-	private JPanel panel1,panel2,panel3,panel4;   	 //选项卡对应的面板
+	private JPanel panel1,panel2,panel3,panel4,panel5;   	 //选项卡对应的面板
 	private JPanel panel1_1,panel1_2;
 	private JPanel panel2_1,panel2_2,panel2_3,panel2_3_1,panel2_3_2,panel2_4,panel2_5,panel2_6,panel2_7;
 	private JPanel panel3_1,panel3_2,panel3_3,panel3_3_1,panel3_3_2,panel3_4,panel3_5;
 	private JPanel panel4_1,panel4_2,panel4_3,panel4_4,panel4_5,panel4_6,panel4_7;
+	private JPanel panel5_1,panel5_2,panel5_3,panel5_4,panel5_5;
 	private JButton button1,button2,button2_go,button2_open1,button2_open2;
 	private JButton button3_open1,button3_open2,button3_go;
 	private JButton button4_open1,button4_open2,button4_open3,button4_open4,button4_go;
+	private JButton button5_open1,button5_open2,button5_go;
 	private JLabel label1_1;
 	private JLabel label2_1,label2_2,label2_3,label2_4,label2_5,label2_6;
 	private JLabel label2_5_des,label2_6_des;
 	private JLabel label3_1,label3_2,label3_3_1,label3_3_2,label3_4;
 	private JLabel label3_4_des;
 	private JLabel label4_1,label4_2,label4_3,label4_4,label4_5,label4_6,label4_6_des;
+	private JLabel label5_1,label5_2,label5_3,label5_4;
 	//private JList list1,list2;				//to-do: auto-merge
 	private JTabbedPane tabbedPane;
 	private JTextField textField2_1,textField2_2,textField2_3,textField2_4,textField2_5,textField2_6;
 	private JTextField textField3_1,textField3_2,textField3_3_1,textField3_3_2,textField3_4;
 	private JTextField textField4_1,textField4_2,textField4_3,textField4_4,textField4_6;
+	private JTextField textField5_1,textField5_2,textField5_3;
 	private JRadioButton radioButton4_5_1,radioButton4_5_2,radioButton4_5_3,radioButton4_5_4;
+	private JCheckBox checkBox5;
 	private ButtonGroup buttongroup;
 	
 	//在构造方法中实现LA所有GUI的布置
 	public MainFrame(){
-		super("Localization Assistant v1.1");
+		super("Localization Assistant v1.2");
 		setSize(480,540);
 		Container contentPane = this.getContentPane();
 		
@@ -58,6 +64,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	    panel2 = new JPanel();  
 	    panel3 = new JPanel(); 
 	    panel4 = new JPanel();
+	    panel5 = new JPanel();
 	    panel1_1 = new JPanel();
 	    panel1_2 = new JPanel();
 	    panel2_1 = new JPanel();
@@ -83,6 +90,11 @@ public class MainFrame extends JFrame implements ActionListener{
 	    panel4_5 = new JPanel();
 	    panel4_6 = new JPanel();
 	    panel4_7 = new JPanel();
+	    panel5_1 = new JPanel();
+	    panel5_2 = new JPanel();
+	    panel5_3 = new JPanel();
+	    panel5_4 = new JPanel();
+	    panel5_5 = new JPanel();
 	    panel1_1.setLayout(new FlowLayout(FlowLayout.CENTER));
 	    panel1_2.setLayout(new FlowLayout(FlowLayout.CENTER));
 	    panel2_1.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -108,15 +120,21 @@ public class MainFrame extends JFrame implements ActionListener{
 	    panel4_5.setLayout(new FlowLayout(FlowLayout.LEFT));
 	    panel4_6.setLayout(new FlowLayout(FlowLayout.LEFT));
 	    panel4_7.setLayout(new FlowLayout(FlowLayout.CENTER));
+	    panel5_1.setLayout(new FlowLayout(FlowLayout.LEFT));
+	    panel5_2.setLayout(new FlowLayout(FlowLayout.LEFT));
+	    panel5_3.setLayout(new FlowLayout(FlowLayout.LEFT));
+	    panel5_4.setLayout(new FlowLayout(FlowLayout.LEFT));
+	    panel5_5.setLayout(new FlowLayout(FlowLayout.CENTER));
 	    panel2_3.setSize(600,30);
 	    panel3_3.setSize(600,30);
 	    
         //TabbedPane
         tabbedPane = new JTabbedPane();
-        tabbedPane.addTab("基本信息",null,panel1,"First panel");  
-        tabbedPane.addTab("条件替换",null,panel2,"Second panel");  
-        tabbedPane.addTab("等距添加字符串",null,panel3,"Third panel");  
-        tabbedPane.addTab("可用文本更新",null,panel4,"Fourth panel");  
+        tabbedPane.addTab("基本信息",null,panel1,"关于LA的基本信息");  
+        tabbedPane.addTab("条件替换",null,panel2,"根据用户需要，有条件地替换字符串");  
+        tabbedPane.addTab("等距添加字符串",null,panel3,"每隔若干个字符就插入某个字符串");  
+        tabbedPane.addTab("可用文本更新",null,panel4,"将旧版文本中可用的译文自动更新到新版文本中");  
+        tabbedPane.addTab("逐行条件清理",null,panel5,"删除指定字符串后该行的所有内容");
         
         //Buttons
 		button1 = new JButton("Open");
@@ -127,6 +145,8 @@ public class MainFrame extends JFrame implements ActionListener{
 		button3_go.setSize(50, 50);
 		button4_go = new JButton("Go");
 		button4_go.setSize(50, 50);
+		button5_go = new JButton("Go");
+		button5_go.setSize(50,50);
 		button2_open1 = new JButton("Open");
 		button2_open2 = new JButton("Open");
 		button3_open1 = new JButton("Open");
@@ -135,6 +155,8 @@ public class MainFrame extends JFrame implements ActionListener{
 		button4_open2 = new JButton("Open");
 		button4_open3 = new JButton("Open");
 		button4_open4 = new JButton("Open");
+		button5_open1 = new JButton("Open");
+		button5_open2 = new JButton("Open");
 		button1.addActionListener(this);
 		button2.addActionListener(this);
 		button2_go.addActionListener(this);
@@ -149,10 +171,13 @@ public class MainFrame extends JFrame implements ActionListener{
 		button4_open2.addActionListener(this);
 		button4_open3.addActionListener(this);
 		button4_open4.addActionListener(this);
+		button5_go.addActionListener(this);
+		button5_open1.addActionListener(this);
+		button5_open2.addActionListener(this);
 		
 		//Labels
 		label1_1 = new JLabel();
-		label1_1.setText("<html><body>作者:JJN(GWYOG)<br/>版本号:v1.1<br/>日期:2016/4/28</body></html>");
+		label1_1.setText("<html><body>作者:JJN(GWYOG)<br/>版本号:v1.2<br/>日期:2016/5/4</body></html>");
 		label2_1 = new JLabel("待操作的文件:");
 		label2_2 = new JLabel("输出到的文件:");
 		label2_3 = new JLabel("待替换的字符串:");			
@@ -174,7 +199,11 @@ public class MainFrame extends JFrame implements ActionListener{
 		label4_5 = new JLabel("更新方式(1表示替换\"=\"前的部分,2表示替换\"=\"后的部分):");
 		label4_6 = new JLabel("*(此项可为空)  操作行数:");
 		label4_6_des = new JLabel("用\"数字\"或是\"数字-数字\"的形式表示,中间以英文逗号分隔,为空代表操作所有行");
-	
+		label5_1 = new JLabel("待操作的文件:");
+		label5_2 = new JLabel("输出到的文件:");
+		label5_3 = new JLabel("清空此字符串后该行的内容:");
+		label5_4 = new JLabel("清空时是否保留该字符串:");
+		
 		//textFields
 		textField2_1 = new JTextField(40);
 		textField2_2 = new JTextField(40);
@@ -193,6 +222,9 @@ public class MainFrame extends JFrame implements ActionListener{
 		textField4_3 = new JTextField(40);
 		textField4_4 = new JTextField(40);
 		textField4_6 = new JTextField(40);
+		textField5_1 = new JTextField(40);
+		textField5_2 = new JTextField(40);
+		textField5_3 = new JTextField(40);
 		contentPane.add(tabbedPane);  
         contentPane.setBackground(Color.white);  
         
@@ -211,7 +243,10 @@ public class MainFrame extends JFrame implements ActionListener{
         buttongroup.add(radioButton4_5_2);
         buttongroup.add(radioButton4_5_3);
         buttongroup.add(radioButton4_5_4);
-
+        
+        //checkBoxs
+        checkBox5 = new JCheckBox("不删除该字符串");
+        
         //First Main Panel
 		//panel1.add(button1);
         panel1.setLayout(new BoxLayout(panel1,BoxLayout.Y_AXIS));
@@ -303,7 +338,24 @@ public class MainFrame extends JFrame implements ActionListener{
 		panel4_6.add(textField4_6);
 		panel4.add(panel4_7);
 		panel4_7.add(button4_go);
-
+		panel5.setLayout(new BoxLayout(panel5,BoxLayout.Y_AXIS));
+		panel5.add(panel5_1);
+		panel5_1.add(label5_1);
+		panel5_1.add(button5_open1);
+		panel5_1.add(textField5_1);
+		panel5.add(panel5_2);
+		panel5_2.add(label5_2);
+		panel5_2.add(button5_open2);
+		panel5_2.add(textField5_2);
+		panel5.add(panel5_3);
+		panel5_3.add(label5_3);
+		panel5_3.add(textField5_3);
+		panel5.add(panel5_4);
+		panel5_4.add(label5_4);
+		panel5_4.add(checkBox5);
+		panel5.add(panel5_5);
+		panel5_5.add(button5_go);
+		panel5.add(Box.createVerticalStrut(170));
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  
 	}
@@ -371,6 +423,14 @@ public class MainFrame extends JFrame implements ActionListener{
 				if(directory != null && filename != null)
 					textField4_4.setText(directory + filename);
 			}
+			else if(e.getSource() == button5_open1){
+				if(directory != null && filename != null)
+					textField5_1.setText(directory + filename);
+			}
+			else if(e.getSource() == button5_open2){
+				if(directory != null && filename != null)
+					textField5_2.setText(directory + filename);
+			}
 		}
 		else if(command == "Exit")
 			System.exit(0);
@@ -389,7 +449,7 @@ public class MainFrame extends JFrame implements ActionListener{
 						 new MessageWindow(this,"错误！","替换忽略符输入格式错误！",-1);
 					else{	
 						FileModifier filemodifier = new FileModifier(this,fileInput,fileOutput,sOrigin,sTo,rowNumberSplit,specialIgnoreSymbol);
-						filemodifier.functionReplace();
+						filemodifier.functionConditionalReplace();
 					}
 				}
 				else
@@ -419,6 +479,14 @@ public class MainFrame extends JFrame implements ActionListener{
 				int updateType = radioButton4_5_1.isSelected()?1:radioButton4_5_2.isSelected()?2:radioButton4_5_3.isSelected()?3:radioButton4_5_4.isSelected()?4:-1;
 				FileModifier filemodifier = new FileModifier(this,fileInput1,fileInput2,fileInput3,fileOutput,updateType);
 				filemodifier.functionUpdateLocalization();		
+			}
+			else if(e.getSource() == button5_go){
+				String fileInput1 = textField5_1.getText();
+				String fileOutput = textField5_2.getText();
+				String sRemoveFlag = textField5_3.getText();
+				int flag = checkBox5.isSelected()?1:0;
+				FileModifier filemodifier = new FileModifier(this,fileInput1,fileOutput,sRemoveFlag,flag);
+				filemodifier.functionConditionalRemove();		
 			}
 		}
 	}
