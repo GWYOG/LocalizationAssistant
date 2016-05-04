@@ -1,6 +1,12 @@
+#LocalizationAssistant v1.3   2016/5/5
+Add new features to LA and improve the performance of "updateLocalization" function of LA: add a new update method and add the check mode
+Revert the fix of that "latent bug" in v1.2 since it isn't a bug actually :(
+Fix the bug that LA will unexpectedly shut down when you close the message window 
+New release: release LA v1.3
+
 #LocalizationAssistant v1.2    2016/5/4
 New function: conditional remove, details are in README.md
-Fix a potential ArrayOutOfBound bug
+Fix a latent ArrayOutOfBound bug
 New release: release LA v1.2
 
 #LocalizationAssistant v1.1    2016/5/2

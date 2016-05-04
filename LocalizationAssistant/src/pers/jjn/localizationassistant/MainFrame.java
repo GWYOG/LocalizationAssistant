@@ -41,21 +41,21 @@ public class MainFrame extends JFrame implements ActionListener{
 	private JLabel label2_5_des,label2_6_des;
 	private JLabel label3_1,label3_2,label3_3_1,label3_3_2,label3_4;
 	private JLabel label3_4_des;
-	private JLabel label4_1,label4_2,label4_3,label4_4,label4_5,label4_6,label4_6_des;
+	private JLabel label4_1,label4_2,label4_3,label4_4,label4_5,label4_6;
 	private JLabel label5_1,label5_2,label5_3,label5_4;
 	//private JList list1,list2;				//to-do: auto-merge
 	private JTabbedPane tabbedPane;
 	private JTextField textField2_1,textField2_2,textField2_3,textField2_4,textField2_5,textField2_6;
 	private JTextField textField3_1,textField3_2,textField3_3_1,textField3_3_2,textField3_4;
-	private JTextField textField4_1,textField4_2,textField4_3,textField4_4,textField4_6;
+	private JTextField textField4_1,textField4_2,textField4_3,textField4_4;
 	private JTextField textField5_1,textField5_2,textField5_3;
-	private JRadioButton radioButton4_5_1,radioButton4_5_2,radioButton4_5_3,radioButton4_5_4;
-	private JCheckBox checkBox5;
+	private JRadioButton radioButton4_5_1,radioButton4_5_2,radioButton4_5_3,radioButton4_5_4,radioButton4_5_5;
+	private JCheckBox checkBox4_6,checkBox5;
 	private ButtonGroup buttongroup;
 	
 	//在构造方法中实现LA所有GUI的布置
 	public MainFrame(){
-		super("Localization Assistant v1.2");
+		super("Localization Assistant v1.3");
 		setSize(480,540);
 		Container contentPane = this.getContentPane();
 		
@@ -177,7 +177,7 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		//Labels
 		label1_1 = new JLabel();
-		label1_1.setText("<html><body>作者:JJN(GWYOG)<br/>版本号:v1.2<br/>日期:2016/5/4</body></html>");
+		label1_1.setText("<html><body>作者:JJN(GWYOG)<br/>版本号:v1.3<br/>日期:2016/5/5</body></html>");
 		label2_1 = new JLabel("待操作的文件:");
 		label2_2 = new JLabel("输出到的文件:");
 		label2_3 = new JLabel("待替换的字符串:");			
@@ -192,13 +192,12 @@ public class MainFrame extends JFrame implements ActionListener{
 		label3_3_2 = new JLabel("待插入的字符串:");
 		label3_4 = new JLabel("*(此项可为空)  操作行数:");
 		label3_4_des = new JLabel("用\"数字\"或是\"数字-数字\"的形式表示,中间以英文逗号分隔,为空代表操作所有行");
-		label4_1 = new JLabel("旧en_US.lang:");
-		label4_2 = new JLabel("旧zh_CN.lang:");
-		label4_3 = new JLabel("新en_US.lang:");
-		label4_4 = new JLabel("输出到的文件(新zh_CN.lang):");
+		label4_1 = new JLabel("旧版本 en_US.lang:");
+		label4_2 = new JLabel("旧版本 zh_CN.lang:");
+		label4_3 = new JLabel("新版本 en_US.lang:");
+		label4_4 = new JLabel("输出到的文件(新版本 zh_CN.lang):");
 		label4_5 = new JLabel("更新方式(1表示替换\"=\"前的部分,2表示替换\"=\"后的部分):");
-		label4_6 = new JLabel("*(此项可为空)  操作行数:");
-		label4_6_des = new JLabel("用\"数字\"或是\"数字-数字\"的形式表示,中间以英文逗号分隔,为空代表操作所有行");
+		label4_6 = new JLabel("是否开启校验模式:");
 		label5_1 = new JLabel("待操作的文件:");
 		label5_2 = new JLabel("输出到的文件:");
 		label5_3 = new JLabel("清空此字符串后该行的内容:");
@@ -221,7 +220,6 @@ public class MainFrame extends JFrame implements ActionListener{
 		textField4_2 = new JTextField(40);
 		textField4_3 = new JTextField(40);
 		textField4_4 = new JTextField(40);
-		textField4_6 = new JTextField(40);
 		textField5_1 = new JTextField(40);
 		textField5_2 = new JTextField(40);
 		textField5_3 = new JTextField(40);
@@ -233,18 +231,22 @@ public class MainFrame extends JFrame implements ActionListener{
         radioButton4_5_2 =new JRadioButton("方式2");
         radioButton4_5_3 =new JRadioButton("先1后2");
         radioButton4_5_4 =new JRadioButton("先2后1");
+        radioButton4_5_5 =new JRadioButton("完全匹配");
         radioButton4_5_1.setSelected(true);
         radioButton4_5_1.addActionListener(this);
         radioButton4_5_2.addActionListener(this);
         radioButton4_5_3.addActionListener(this);
         radioButton4_5_4.addActionListener(this);
+        radioButton4_5_5.addActionListener(this);
         buttongroup = new ButtonGroup();
         buttongroup.add(radioButton4_5_1);
         buttongroup.add(radioButton4_5_2);
         buttongroup.add(radioButton4_5_3);
         buttongroup.add(radioButton4_5_4);
+        buttongroup.add(radioButton4_5_5);
         
         //checkBoxs
+        checkBox4_6 = new JCheckBox("开启");
         checkBox5 = new JCheckBox("不删除该字符串");
         
         //First Main Panel
@@ -331,11 +333,10 @@ public class MainFrame extends JFrame implements ActionListener{
 		panel4_5.add(radioButton4_5_2);
 		panel4_5.add(radioButton4_5_3);
 		panel4_5.add(radioButton4_5_4);
-		//暂时移除关于操作行数的限制，因为可能没用
-		//panel4.add(panel4_6);
+		panel4_5.add(radioButton4_5_5);
+		panel4.add(panel4_6);
 		panel4_6.add(label4_6);
-		panel4_6.add(label4_6_des);
-		panel4_6.add(textField4_6);
+		panel4_6.add(checkBox4_6);
 		panel4.add(panel4_7);
 		panel4_7.add(button4_go);
 		panel5.setLayout(new BoxLayout(panel5,BoxLayout.Y_AXIS));
@@ -369,7 +370,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
-		if(e.getSource() == radioButton4_5_1 || e.getSource() == radioButton4_5_2 || e.getSource() == radioButton4_5_3 || e.getSource() == radioButton4_5_4)
+		if(e.getSource() == radioButton4_5_1 || e.getSource() == radioButton4_5_2 || e.getSource() == radioButton4_5_3 || e.getSource() == radioButton4_5_4 || e.getSource() == radioButton4_5_5)
 		{
 			 if(radioButton4_5_1.isSelected())
 			 {	textField4_1.setEnabled(false);
@@ -476,7 +477,9 @@ public class MainFrame extends JFrame implements ActionListener{
 				String fileInput2 = textField4_2.getText();
 				String fileInput3 = textField4_3.getText();
 				String fileOutput = textField4_4.getText();
-				int updateType = radioButton4_5_1.isSelected()?1:radioButton4_5_2.isSelected()?2:radioButton4_5_3.isSelected()?3:radioButton4_5_4.isSelected()?4:-1;
+				int updateType = radioButton4_5_1.isSelected()?1:radioButton4_5_2.isSelected()?2:radioButton4_5_3.isSelected()?3:radioButton4_5_4.isSelected()?4:radioButton4_5_5.isSelected()?5:-1;
+				int checkModeStatus = ((updateType == 2 || updateType == 5) && checkBox4_6.isSelected())? 1 : 0;
+				updateType = updateType * 10 + checkModeStatus;
 				FileModifier filemodifier = new FileModifier(this,fileInput1,fileInput2,fileInput3,fileOutput,updateType);
 				filemodifier.functionUpdateLocalization();		
 			}

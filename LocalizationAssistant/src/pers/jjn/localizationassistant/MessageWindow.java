@@ -30,11 +30,11 @@ public class MessageWindow extends JFrame implements ActionListener{
 		int icon_size = 40;
 		switch(imageType){
 			case -1: 
-				this.setDefaultCloseOperation(EXIT_ON_CLOSE);directory="resources/error.png";message=messageOrigin;button = new JButton("确定");button_flag=1;break;
+				directory="resources/error.png";message=messageOrigin;button = new JButton("确定");button_flag=1;break;
 			case 0: // to-change
-				this.setDefaultCloseOperation(EXIT_ON_CLOSE);directory="resources/loading.gif";icon_size = 70;message="waiting...";break;
+				directory="resources/loading.gif";icon_size = 70;message="waiting...";break;
 			case 1: 
-				this.setDefaultCloseOperation(EXIT_ON_CLOSE);directory="resources/complete.png";message="Done!";button = new JButton("确定");button_flag=1;break;
+				directory="resources/complete.png";message="Done!";button = new JButton("确定");button_flag=1;break;
 		}
 		this.setSize(300,150);
 		this.setAlwaysOnTop(true);
@@ -63,6 +63,7 @@ public class MessageWindow extends JFrame implements ActionListener{
 		}	
 		this.setVisible(true);
 		this.isAlwaysOnTop();
+		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); 
 
 	}
 	

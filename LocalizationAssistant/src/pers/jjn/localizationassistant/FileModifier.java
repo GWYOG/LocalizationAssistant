@@ -135,7 +135,7 @@ public class FileModifier {
 		    fos = new FileOutputStream(file);
 		    osw = new OutputStreamWriter(fos,"UTF-8");
 	  	    while((str = br.readLine()) != null) {
-	  	    	if(str.length()!=0 && str.charAt(0) != '#' && verifyLineNumber(lineNumber) >= 0 && str.indexOf('=')!=-1 && str.indexOf('=')!=str.length()-1)
+	  	    	if(str.length()!=0 && str.charAt(0) != '#' && verifyLineNumber(lineNumber) >= 0 && str.indexOf('=')!=-1)
 		    	{
 		    		str1 = str.substring(str.indexOf('=')+1);	
 		    		String str2,str3="";
@@ -222,7 +222,7 @@ public class FileModifier {
 		    fos = new FileOutputStream(file);
 		    osw = new OutputStreamWriter(fos,"UTF-8");
 	  	    while((str = br.readLine()) != null) {
-	  	    	if(str.length()!=0 && str.charAt(0) != '#' && verifyLineNumber(lineNumber) >= 0 && str.indexOf('=')!=-1 && str.indexOf('=')!=str.length()-1)
+	  	    	if(str.length()!=0 && str.charAt(0) != '#' && verifyLineNumber(lineNumber) >= 0 && str.indexOf('=')!=-1)
 		    	{
 		    		str1 = str.substring(str.indexOf('=')+1);	
 		    		String str2="";
@@ -288,18 +288,21 @@ public class FileModifier {
 	public void functionUpdateLocalization(){
 		String tempOutput = fileOutput.substring(0,fileOutput.lastIndexOf('.'))+"TempLocalizationAssistantUpdateLocalization.txt";
 		int status1=0,status2=0;
+		int checkModeStatus = updateType % 10;
+		updateType = updateType / 10;
 		switch(updateType){
-		case 1:status1=functionUpdateLocalization(fileInput2,fileInput3,fileOutput);break;
-		case 2:status2=functionUpdateLocalization(fileInput1,fileInput2,fileInput3,fileOutput);break;
-		case 3:status1=functionUpdateLocalization(fileInput2,fileInput3,tempOutput);status2=functionUpdateLocalization(fileInput1,fileInput2,tempOutput,fileOutput);fileDelete(tempOutput);break;
-		case 4:status2=functionUpdateLocalization(fileInput1,fileInput2,fileInput3,tempOutput);status1=functionUpdateLocalization(fileInput2,tempOutput,fileOutput);fileDelete(tempOutput);break;
+		case 1:status1=functionUpdateLocalization(fileInput2,fileInput3,fileOutput,checkModeStatus);break;
+		case 2:status2=functionUpdateLocalization(fileInput1,fileInput2,fileInput3,fileOutput,checkModeStatus);break;
+		case 3:status1=functionUpdateLocalization(fileInput2,fileInput3,tempOutput,checkModeStatus);status2=functionUpdateLocalization(fileInput1,fileInput2,tempOutput,fileOutput,checkModeStatus);fileDelete(tempOutput);break;
+		case 4:status2=functionUpdateLocalization(fileInput1,fileInput2,fileInput3,tempOutput,checkModeStatus);status1=functionUpdateLocalization(fileInput2,tempOutput,fileOutput,checkModeStatus);fileDelete(tempOutput);break;
+		case 5:checkModeStatus=(checkModeStatus==1?3:2);status2=functionUpdateLocalization(fileInput1,fileInput2,fileInput3,fileOutput,checkModeStatus);break;
 		}
 		if(status1==0 && status2==0)
 			new MessageWindow(parentFrame,"完成","Done!",1);
 	}
 	
-	//方法的重载
-	public int functionUpdateLocalization(String fileInput2,String fileInput3,String fileOutput){
+	//功能三重载方法1
+	public int functionUpdateLocalization(String fileInput2,String fileInput3,String fileOutput,int checkModeStatus){
 		Hashtable<String, String> hashtable = new Hashtable<String, String>();
 		String str = "";
 		String str1 = "";
@@ -311,7 +314,8 @@ public class FileModifier {
 	  	    br = new BufferedReader(isr);
 	  	    while((str = br.readLine()) != null) {
 	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1)
-		    	{
+		    	{   
+	  	    		//hashtable存放旧版zh_CN.lang的旧版键-旧版中文值
 		    		str1 = str.substring(0,str.indexOf('=')).toLowerCase();	
 		    		str2 = str.substring(str.indexOf('=')+1);
 		    		hashtable.put(str1,str2);
@@ -345,17 +349,15 @@ public class FileModifier {
 		    osw = new OutputStreamWriter(fos,"UTF-8");
 	  	    while((str = br.readLine()) != null) {
 	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1)
-		    	{
-		    		str1 = str.substring(0,str.indexOf('=')).toLowerCase();	
-		    		if(hashtable.containsKey(str1))
-		    		{
-		    			osw.write(str1 + "=" + hashtable.get(str1));
-		    			osw.write("\n");}
+		    	{	
+	  	    		//判断新版en_US.lang中新版键是否和hashtable中的旧版键一样. 如果一样，则用旧版的中文值替换新版的英文值
+		    		str1 = str.substring(0,str.indexOf('='));	
+		    		if(hashtable.containsKey(str1.toLowerCase()))
+		    			str1 = str1 + "=" + hashtable.get(str1.toLowerCase());
 		    		else
-		    		{
-		    			osw.write(str);
-		    			osw.write("\n");
-		    		}
+		    			str1 = str;
+	    			osw.write(str1);
+	    			osw.write("\n");
 		    	}
 	  	    	else
 	  	    	{
@@ -385,8 +387,8 @@ public class FileModifier {
 		return 0;
 	}
 	
-	//方法的重载
-	public int functionUpdateLocalization(String fileInput1,String fileInput2,String fileInput3,String fileOutput){
+	//功能三重载方法2
+	public int functionUpdateLocalization(String fileInput1,String fileInput2,String fileInput3,String fileOutput,int checkModeStatus){
 		Hashtable<String, String> hashtable1 = new Hashtable<String, String>();
 		Hashtable<String, String> hashtable2 = new Hashtable<String, String>();
 		Hashtable<String, String> hashtable3 = new Hashtable<String, String>();
@@ -399,9 +401,10 @@ public class FileModifier {
 		    isr = new InputStreamReader(fis,"UTF-8");
 	  	    br = new BufferedReader(isr);
 	  	    while((str = br.readLine()) != null) {
-	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1 && str.indexOf('=')!=str.length()-1)
-		    	{
-		    		str1 = str.substring(0,str.indexOf('='));	
+	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1)
+		    	{	
+	  	    		//hashtable1:旧版英文文本小写键-旧版英文值
+		    		str1 = str.substring(0,str.indexOf('=')).toLowerCase();	
 		    		str2 = str.substring(str.indexOf('=')+1);
 		    		hashtable1.put(str1,str2.toLowerCase());
 		    	}
@@ -429,7 +432,8 @@ public class FileModifier {
 	  	    while((str = br.readLine()) != null) {
 	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1 && str.indexOf('=')!=str.length()-1)
 		    	{
-		    		str1 = str.substring(0,str.indexOf('='));	
+	  	    		//hashtable2:旧版中文文本小写键-旧版中文值
+		    		str1 = str.substring(0,str.indexOf('=')).toLowerCase();	
 		    		str2 = str.substring(str.indexOf('=')+1);
 		    		hashtable2.put(str1,str2);
 		    	}
@@ -450,10 +454,14 @@ public class FileModifier {
 		    		return -1;
 		    	}
 		    }
+		//hashtable:旧版英文值-旧版中文值，这里认为旧版英文键内部或中文键内部不会出现大小写不同的键
         Set<String> keys1 = hashtable1.keySet();  
         for(String key: keys1)
             if(hashtable2.containsKey(key))
-            	hashtable3.put(hashtable1.get(key),hashtable2.get(key));
+            	if(checkModeStatus==1 && hashtable3.containsKey(hashtable1.get(key)) && !hashtable2.get(key).equals(hashtable3.get(hashtable1.get(key))))
+            		hashtable3.put(hashtable1.get(key),"##Warning:" + hashtable2.get(key));
+            	else	
+            		hashtable3.put(hashtable1.get(key),hashtable2.get(key));
 		try{
 		    fis = new FileInputStream(fileInput3);
 		    isr = new InputStreamReader(fis,"UTF-8");
@@ -465,18 +473,51 @@ public class FileModifier {
 		    fos = new FileOutputStream(file);
 		    osw = new OutputStreamWriter(fos,"UTF-8");
 	  	    while((str = br.readLine()) != null) {
-	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1 && str.indexOf('=')!=str.length()-1)
+	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1)
 		    	{
-		    		str1 = str.substring(str.indexOf('=')+1);	
-		    		if(hashtable3.containsKey(str1.toLowerCase()))
-		    		{
-		    			osw.write(str.substring(0,str.indexOf('=')+1) + hashtable3.get(str1.toLowerCase()));
-		    			osw.write("\n");}
-		    		else
-		    		{
-		    			osw.write(str);
+	  	    		if(checkModeStatus == 0 || checkModeStatus == 1){
+			    		str1 = str.substring(str.indexOf('=')+1);	
+			    		if(hashtable3.containsKey(str1.toLowerCase()))
+			    			if(hashtable3.get(str1.toLowerCase()).indexOf("##Warning:") == -1)
+			    				str1 = str.substring(0,str.indexOf('=')+1) + hashtable3.get(str1.toLowerCase());
+			    			else
+			    				str1 = "##Warning:" + str.substring(0,str.indexOf('=')+1) + hashtable3.get(str1.toLowerCase()).replaceAll("##Warning:", "");
+			    		else
+			    			str1 = str;
+		    			osw.write(str1);
 		    			osw.write("\n");
-		    		}
+	  	    		}
+	  	    		else if(checkModeStatus == 2){
+			    		str1 = str.substring(str.indexOf('=')+1);
+			    		str2 = str.substring(0,str.indexOf('='));
+			    		if(hashtable3.containsKey(str1.toLowerCase()) && hashtable1.containsKey(str2.toLowerCase()) && hashtable1.get(str2.toLowerCase()).toLowerCase().equals(str1.toLowerCase()))
+			    			str1 = str2 + "=" + hashtable3.get(str1.toLowerCase());
+			    		else
+			    			str1 = str;
+		    			osw.write(str1);
+		    			osw.write("\n");
+	  	    		}
+	  	    		else if(checkModeStatus == 3){
+			    		str1 = str.substring(str.indexOf('=')+1);
+			    		str2 = str.substring(0,str.indexOf('='));
+			    		if(hashtable3.containsKey(str1.toLowerCase()) && hashtable1.containsKey(str2.toLowerCase()) && hashtable1.get(str2.toLowerCase()).toLowerCase().equals(str1.toLowerCase())){
+			    			str1 = str2 + "=" + hashtable3.get(str1.toLowerCase());
+			    			osw.write(str1);
+			    			osw.write("\n");
+			    		}
+			    		else if(hashtable3.containsKey(str1.toLowerCase()) && hashtable1.containsKey(str2.toLowerCase()) && !hashtable1.get(str2.toLowerCase()).toLowerCase().equals(str1.toLowerCase())){
+			    			osw.write("##-:" + str2 + "=" + hashtable1.get(str2.toLowerCase()));
+			    			osw.write("\n");
+			    			osw.write("##+:" + str);
+			    			osw.write("\n");
+			    			osw.write("##R:" + str2 + "=" + hashtable3.get(str1.toLowerCase()));
+			    			osw.write("\n");
+			    		}
+			    		else{
+			    			osw.write("##N:" + str);
+			    			osw.write("\n");
+			    		}
+	  	    		}
 		    	}
 	  	    	else
 	  	    	{
