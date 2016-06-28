@@ -1,4 +1,4 @@
-package pers.jjn.localizationassistant;
+package pers.gwyog.localizationassistant;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -9,8 +9,16 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
 public class FileModifier {
@@ -40,6 +48,7 @@ public class FileModifier {
 	private String sRemoveFlag;
 	private String []rowNumberSplit;
 	private String []specialIgnoreSymbol;
+	private String []filter;
 	private int updateType;
     
 	public FileModifier(MainFrame parentFrame,String fileInput,String fileOutput,String sOrigin,String sTo,String []rowNumberSplit,String []specialIgnoreSymbol){
@@ -76,6 +85,13 @@ public class FileModifier {
 		this.fileOutput = fileOutput;
 		this.sRemoveFlag = sRemoveFlag;
 		this.updateType = flag;
+	}
+	
+	public FileModifier(MainFrame parentFrame,String fileInput1,String fileOutput,String []filter){
+		this.parentFrame = parentFrame;
+		this.fileInput1 = fileInput1;
+		this.fileOutput = fileOutput;
+		this.filter = filter;
 	}
 	
 	//输入一个int型参数，判断它是否在用户给定的操作行数范围内：不在的话返回-1，在的话返回该行数，如果用户未置顶操作行数的话，默认对所有行操作，此时返回0
@@ -116,6 +132,39 @@ public class FileModifier {
 			JOptionPane.showMessageDialog(null, "数字格式输入错误！", "错误", JOptionPane.ERROR_MESSAGE); 
 		}
 		return -1;
+	}
+	
+	//判断一个字符串中是否包含中文
+	public boolean isContainChineseChar(String str){
+		Pattern pattern = Pattern.compile("[\u4e00-\u9fbf]");
+		return pattern.matcher(str).find();
+	}
+	
+	//将字符串首字母变为大写
+	public String toUpperInitial(String str){
+		if(str == null || str == "")
+			return str;
+		else
+			return str.substring(0,1).toUpperCase()+str.substring(1);
+	}
+	
+	//将字符串首字母变为小写
+	public String toLowerInitial(String str){
+		if(str == null || str == "")
+			return str;
+		else
+			return str.substring(0,1).toLowerCase()+str.substring(1);
+	}
+	
+	//判断字符串是否在字符串数组filter中
+	public Boolean isInFilter(String str){
+		if(filter==null)
+			return false;
+		else
+			for(int i=0;i<filter.length;i++)
+				if(filter[i].toLowerCase().equals(str))
+					return true;
+		return false;
 	}
 	
 	//LA的第一个功能，条件替换
@@ -288,21 +337,22 @@ public class FileModifier {
 	public void functionUpdateLocalization(){
 		String tempOutput = fileOutput.substring(0,fileOutput.lastIndexOf('.'))+"TempLocalizationAssistantUpdateLocalization.txt";
 		int status1=0,status2=0;
-		int checkModeStatus = updateType % 10;
-		updateType = updateType / 10;
+		int informationModeStatus = updateType % 10;
+		int checkModeStatus = (updateType / 10) % 10;
+		updateType = updateType / 100;
 		switch(updateType){
-		case 1:status1=functionUpdateLocalization(fileInput2,fileInput3,fileOutput,checkModeStatus);break;
-		case 2:status2=functionUpdateLocalization(fileInput1,fileInput2,fileInput3,fileOutput,checkModeStatus);break;
-		case 3:status1=functionUpdateLocalization(fileInput2,fileInput3,tempOutput,checkModeStatus);status2=functionUpdateLocalization(fileInput1,fileInput2,tempOutput,fileOutput,checkModeStatus);fileDelete(tempOutput);break;
-		case 4:status2=functionUpdateLocalization(fileInput1,fileInput2,fileInput3,tempOutput,checkModeStatus);status1=functionUpdateLocalization(fileInput2,tempOutput,fileOutput,checkModeStatus);fileDelete(tempOutput);break;
-		case 5:checkModeStatus=(checkModeStatus==1?3:2);status2=functionUpdateLocalization(fileInput1,fileInput2,fileInput3,fileOutput,checkModeStatus);break;
+		case 1:status1=functionUpdateLocalization(fileInput2,fileInput3,fileOutput);break;
+		case 2:status2=functionUpdateLocalization(fileInput1,fileInput2,fileInput3,fileOutput,0,checkModeStatus,informationModeStatus);break;
+		case 3:status1=functionUpdateLocalization(fileInput2,fileInput3,tempOutput);status2=functionUpdateLocalization(fileInput1,fileInput2,tempOutput,fileOutput,0,checkModeStatus,informationModeStatus);fileDelete(tempOutput);break;
+		case 4:status2=functionUpdateLocalization(fileInput1,fileInput2,fileInput3,tempOutput,0,checkModeStatus,informationModeStatus);status1=functionUpdateLocalization(fileInput2,tempOutput,fileOutput);fileDelete(tempOutput);break;
+		case 5:status2=functionUpdateLocalization(fileInput1,fileInput2,fileInput3,fileOutput,1,checkModeStatus,informationModeStatus);break;
 		}
 		if(status1==0 && status2==0)
 			new MessageWindow(parentFrame,"完成","Done!",1);
 	}
 	
 	//功能三重载方法1
-	public int functionUpdateLocalization(String fileInput2,String fileInput3,String fileOutput,int checkModeStatus){
+	public int functionUpdateLocalization(String fileInput2,String fileInput3,String fileOutput){
 		Hashtable<String, String> hashtable = new Hashtable<String, String>();
 		String str = "";
 		String str1 = "";
@@ -388,13 +438,14 @@ public class FileModifier {
 	}
 	
 	//功能三重载方法2
-	public int functionUpdateLocalization(String fileInput1,String fileInput2,String fileInput3,String fileOutput,int checkModeStatus){
+	public int functionUpdateLocalization(String fileInput1,String fileInput2,String fileInput3,String fileOutput,int doubleCheckFlag,int checkModeStatus,int informationModeStatus){
 		Hashtable<String, String> hashtable1 = new Hashtable<String, String>();
 		Hashtable<String, String> hashtable2 = new Hashtable<String, String>();
 		Hashtable<String, String> hashtable3 = new Hashtable<String, String>();
 		String str = "";
-		String str1 = "";
-		String str2 = "";
+		String str1 = "";	
+		String str2 = "";	
+		String str3 = "";	//output String
 		MessageWindow mw = new MessageWindow(parentFrame,"处理中","",0);
 		try{
 		    fis = new FileInputStream(fileInput1);
@@ -403,7 +454,7 @@ public class FileModifier {
 	  	    while((str = br.readLine()) != null) {
 	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1)
 		    	{	
-	  	    		//hashtable1:旧版英文文本小写键-旧版英文值
+	  	    		//hashtable1:英文文本旧版小写键-旧版小写英文值
 		    		str1 = str.substring(0,str.indexOf('=')).toLowerCase();	
 		    		str2 = str.substring(str.indexOf('=')+1);
 		    		hashtable1.put(str1,str2.toLowerCase());
@@ -432,7 +483,7 @@ public class FileModifier {
 	  	    while((str = br.readLine()) != null) {
 	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1 && str.indexOf('=')!=str.length()-1)
 		    	{
-	  	    		//hashtable2:旧版中文文本小写键-旧版中文值
+	  	    		//hashtable2:旧版中文文本小写键-值
 		    		str1 = str.substring(0,str.indexOf('=')).toLowerCase();	
 		    		str2 = str.substring(str.indexOf('=')+1);
 		    		hashtable2.put(str1,str2);
@@ -474,49 +525,81 @@ public class FileModifier {
 		    osw = new OutputStreamWriter(fos,"UTF-8");
 	  	    while((str = br.readLine()) != null) {
 	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1)
-		    	{
-	  	    		if(checkModeStatus == 0 || checkModeStatus == 1){
-			    		str1 = str.substring(str.indexOf('=')+1);	
-			    		if(hashtable3.containsKey(str1.toLowerCase()))
-			    			if(hashtable3.get(str1.toLowerCase()).indexOf("##Warning:") == -1)
-			    				str1 = str.substring(0,str.indexOf('=')+1) + hashtable3.get(str1.toLowerCase());
+		    	{	
+	  	    		if(doubleCheckFlag == 0)
+	  	    		{
+	  	    			str1 = str.substring(0,str.indexOf('='));		//key
+	  	    			str2 = str.substring(str.indexOf('=')+1);		//value
+			    		//若未发现新版某行与旧版有相同的英文值，则str3仍未该行；若发现与旧版有相同的值，则将=后替换为旧版中文值；特别地，若开启校验模式，则当该英文值对应多个不同旧版中文值时，还要在str3前面加上##Warning:
+	  	    			if(hashtable3.containsKey(str2.toLowerCase()))
+			    			if(hashtable3.get(str2.toLowerCase()).indexOf("##Warning:") == -1)
+			    				str3 = str.substring(0,str.indexOf('=')+1) + hashtable3.get(str2.toLowerCase());
 			    			else
-			    				str1 = "##Warning:" + str.substring(0,str.indexOf('=')+1) + hashtable3.get(str1.toLowerCase()).replaceAll("##Warning:", "");
+			    				str3 = "##Warning:" + str.substring(0,str.indexOf('=')+1) + hashtable3.get(str2.toLowerCase()).replaceAll("##Warning:", "");
 			    		else
-			    			str1 = str;
-		    			osw.write(str1);
-		    			osw.write("\n");
+			    			str3 = str;
+	  	    			//当勾选显示变更信息后，还要对str3进一步处理才能输出到文件中
+	  	    			//str3和str1忽略大小写相等意味着该行英文值在旧版中不存在.此时需要显示变更信息
+		    			if(informationModeStatus == 1 && str3.toLowerCase().equals(str.toLowerCase()))
+	  	    				//之后再判断该行英文键是否在旧版中存在，若存在，则说明该行文本更新了
+	    					if(hashtable2.containsKey(str1.toLowerCase()) && !hashtable2.get(str1.toLowerCase()).toLowerCase().equals(str2.toLowerCase()))
+	    					{
+			    				osw.write("##-:" + str1 + "=" + hashtable1.get(str1.toLowerCase()));
+					    		osw.write("\n");
+					    		osw.write("##+:" + str3);
+					    		osw.write("\n");
+					    		osw.write("##R:" + str1 + "=" + hashtable2.get(str1.toLowerCase()));
+					    		osw.write("\n");
+					    	}
+			    			else 
+			    			{
+				    			osw.write("##N:" + str);
+				    			osw.write("\n");
+			    			}
+		    			else
+		    			{
+		    				osw.write(str3);
+			    			osw.write("\n");
+		    			}
 	  	    		}
-	  	    		else if(checkModeStatus == 2){
-			    		str1 = str.substring(str.indexOf('=')+1);
-			    		str2 = str.substring(0,str.indexOf('='));
-			    		if(hashtable3.containsKey(str1.toLowerCase()) && hashtable1.containsKey(str2.toLowerCase()) && hashtable1.get(str2.toLowerCase()).toLowerCase().equals(str1.toLowerCase()))
-			    			str1 = str2 + "=" + hashtable3.get(str1.toLowerCase());
-			    		else
-			    			str1 = str;
-		    			osw.write(str1);
-		    			osw.write("\n");
-	  	    		}
-	  	    		else if(checkModeStatus == 3){
-			    		str1 = str.substring(str.indexOf('=')+1);
-			    		str2 = str.substring(0,str.indexOf('='));
-			    		if(hashtable3.containsKey(str1.toLowerCase()) && hashtable1.containsKey(str2.toLowerCase()) && hashtable1.get(str2.toLowerCase()).toLowerCase().equals(str1.toLowerCase())){
-			    			str1 = str2 + "=" + hashtable3.get(str1.toLowerCase());
-			    			osw.write(str1);
+	  	    		else
+	  	    		{
+	  	    			if(informationModeStatus == 0)
+	  	    			{
+				    		str1 = str.substring(str.indexOf('=')+1);
+				    		str2 = str.substring(0,str.indexOf('='));
+				    		if(hashtable3.containsKey(str1.toLowerCase()) && hashtable1.containsKey(str2.toLowerCase()) && hashtable1.get(str2.toLowerCase()).toLowerCase().equals(str1.toLowerCase()))
+				    			str3 = str2 + "=" + hashtable3.get(str1.toLowerCase());
+				    		else
+				    			str3 = str;
+			    			osw.write(str3);
 			    			osw.write("\n");
-			    		}
-			    		else if(hashtable3.containsKey(str1.toLowerCase()) && hashtable1.containsKey(str2.toLowerCase()) && !hashtable1.get(str2.toLowerCase()).toLowerCase().equals(str1.toLowerCase())){
-			    			osw.write("##-:" + str2 + "=" + hashtable1.get(str2.toLowerCase()));
-			    			osw.write("\n");
-			    			osw.write("##+:" + str);
-			    			osw.write("\n");
-			    			osw.write("##R:" + str2 + "=" + hashtable3.get(str1.toLowerCase()));
-			    			osw.write("\n");
-			    		}
-			    		else{
-			    			osw.write("##N:" + str);
-			    			osw.write("\n");
-			    		}
+	  	    			}
+	  	    			else
+	  	    			{
+	  	    				str1 = str.substring(str.indexOf('=')+1);
+				    		str2 = str.substring(0,str.indexOf('='));
+				    		if(hashtable3.containsKey(str1.toLowerCase()) && hashtable1.containsKey(str2.toLowerCase()) && hashtable1.get(str2.toLowerCase()).toLowerCase().equals(str1.toLowerCase()))
+				    		{
+				    			str1 = str2 + "=" + hashtable3.get(str1.toLowerCase());
+				    			osw.write(str1);
+				    			osw.write("\n");
+				    		}
+				    		else if(hashtable3.containsKey(str1.toLowerCase()) && hashtable1.containsKey(str2.toLowerCase()) && !hashtable1.get(str2.toLowerCase()).toLowerCase().equals(str1.toLowerCase()))
+				    		{
+				    			osw.write("##-:" + str2 + "=" + hashtable1.get(str2.toLowerCase()));
+				    			osw.write("\n");
+				    			osw.write("##+:" + str);
+				    			osw.write("\n");
+				    			osw.write("##R:" + str2 + "=" + hashtable3.get(str1.toLowerCase()));
+				    			osw.write("\n");
+				    		}
+				    		else
+				    		{
+				    			osw.write("##N:" + str);
+				    			osw.write("\n");
+				    		}
+	  	    			}
 	  	    		}
 		    	}
 	  	    	else
@@ -548,22 +631,32 @@ public class FileModifier {
 	}
 	
 	//LA的第四个功能，逐行条件清理
-		public void functionConditionalRemove(){
-			MessageWindow mw = new MessageWindow(parentFrame,"处理中","",0);
-			try{
-				String str = "";
-				String str1 = "";
-			    fis = new FileInputStream(fileInput1);
-			    isr = new InputStreamReader(fis,"UTF-8");
-		  	    br = new BufferedReader(isr);
-			    file = new File(fileOutput);
-			    if(!file.exists()){
-			    	file.createNewFile();
-			    }
-			    fos = new FileOutputStream(file);
-			    osw = new OutputStreamWriter(fos,"UTF-8");
-		  	    while((str = br.readLine()) != null) {
-		  	    	if(updateType == 0)
+	public int functionConditionalRemove(){
+		MessageWindow mw = new MessageWindow(parentFrame,"处理中","",0);
+		int updateType1 = updateType / 10;
+		int updateType2 = updateType % 10;
+		try{
+			String str = "";
+			String str1 = "";
+		    fis = new FileInputStream(fileInput1);
+		    isr = new InputStreamReader(fis,"UTF-8");
+	  	    br = new BufferedReader(isr);
+		    file = new File(fileOutput);
+		    if(!file.exists()){
+		    	file.createNewFile();
+		    }
+		    fos = new FileOutputStream(file);
+		    osw = new OutputStreamWriter(fos,"UTF-8");
+	  	    while((str = br.readLine()) != null) {
+	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1){
+		  	    	if(updateType2 == 1)
+		  	    	{
+		  	    		Pattern pattern = Pattern.compile("##\\S+:");
+		  	    		Matcher matcher = pattern.matcher(str);
+		  	    		if(matcher.find())
+		  	    			str = str.substring(matcher.end());
+		  	    	}
+		  	    	if(updateType1 == 0)
 			  	    	if(str.length()!=0 && str.indexOf(sRemoveFlag)!=-1)
 				    		str1 = str.substring(0,str.indexOf(sRemoveFlag));	
 			  	    	else
@@ -573,38 +666,293 @@ public class FileModifier {
 					    	str1 = str.substring(0,str.indexOf(sRemoveFlag)+sRemoveFlag.length());	
 			  	    	else
 			  	    		str1 = str;
-	  	    		osw.write(str1);
-	  	    		osw.write("\n");
+
+	  	    	}
+	  	    	else
+	  	    		str1 = str;
+  	    		osw.write(str1);
+  	    		osw.write("\n");
+		    }
+		    }catch(FileNotFoundException e){
+				 new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
+				 return -1;
+		    }catch(IOException e){
+				 new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
+				 return -1;
+		    }finally{	 
+		    	try{
+		    		if(bw != null)
+			    		bw.flush();
+		    		br.close();   
+		    		isr.close();      
+		    		fis.close();
+		    		osw.close();
+		    		fos.close();
+		    		mw.close();
+		    	}catch(IOException e){ 
+		    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
+		    		return -1;
+		    	}
+		    }
+		try{
+			Thread.sleep(1000);}
+		catch(InterruptedException e){
+			e.printStackTrace();
+			new MessageWindow(parentFrame,"错误！","错误，未知错误！",-1);
+			return -1;
+		}
+		new MessageWindow(parentFrame,"完成","Done!",1);
+		return 0;
+	}
+		
+	//LA的第5个功能，已译文本替换
+	public int functionAutoReplaceEnglishTextWithChineseTranslation(){
+		Hashtable<String, String> hashtable1 = new Hashtable<String, String>();
+		Hashtable<String, String> hashtable2 = new Hashtable<String, String>();
+		Hashtable<String, String> hashtable3 = new Hashtable<String, String>();
+		int updateType = this.updateType / 10;
+		int checkModeStatus = this.updateType % 10;
+		String str = "";
+		String str1 = "";	
+		String str2 = "";	
+		String str3 = "";	//output String
+		MessageWindow mw = new MessageWindow(parentFrame,"处理中","",0);
+		//载入第一个文件
+		try{
+		    fis = new FileInputStream(fileInput1);
+		    isr = new InputStreamReader(fis,"UTF-8");
+	  	    br = new BufferedReader(isr);
+	  	    while((str = br.readLine()) != null) {
+	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1)
+		    	{	
+	  	    		if(updateType == 0){
+		  	    		//hashtable1:英文文本小写键-小写英文值
+			    		str1 = str.substring(0,str.indexOf('=')).toLowerCase();	
+			    		str2 = str.substring(str.indexOf('=')+1);
+			    		hashtable1.put(str1,str2.toLowerCase());
+	  	    		}
+	  	    		else if(updateType == 1){
+		  	    		//hashtable3:英文值-中文值
+			    		str1 = str.substring(0,str.indexOf('='));	
+			    		str2 = str.substring(str.indexOf('=')+1);
+			    		if(hashtable3.containsKey(str1) && !hashtable3.get(str1).equals(str2))
+			    			hashtable3.put(str1,"##Warnging:"+str2);
+			    		else
+			    			hashtable3.put(str1,str2);
+	  	    		}
+		    	}
+		    }
+		    }catch(FileNotFoundException e){
+				 new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
+				 return -1;
+		    }catch(IOException e){
+				 new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
+				 return -1;
+		    }finally{	 
+		    	try{
+		    		br.close();   
+		    		isr.close();      
+		    		fis.close();
+		    	}catch(IOException e){ 
+		    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
+		    		return -1;
+		    	}
+		    }
+		//当以执行默认模式时，载入第二个文件并创建hashtable3
+		if(updateType == 0){
+			try{
+			    fis = new FileInputStream(fileInput2);
+			    isr = new InputStreamReader(fis,"UTF-8");
+		  	    br = new BufferedReader(isr);
+		  	    while((str = br.readLine()) != null) {
+		  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1 && str.indexOf('=')!=str.length()-1)
+			    	{
+		  	    		//hashtable2:中文文本小写键-值(这儿需要判断它里面是否包含汉字,不包含汉字的值略过)
+			    		str1 = str.substring(0,str.indexOf('=')).toLowerCase();	
+			    		str2 = str.substring(str.indexOf('=')+1);
+			    		if(isContainChineseChar(str2))
+			    			hashtable2.put(str1,str2);
+			    	}
 			    }
 			    }catch(FileNotFoundException e){
 					 new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
-					 return;
+					 return -1;
 			    }catch(IOException e){
 					 new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
-					 return;
+					 return -1;
 			    }finally{	 
 			    	try{
-			    		if(bw != null)
-				    		bw.flush();
 			    		br.close();   
 			    		isr.close();      
 			    		fis.close();
-			    		osw.close();
-			    		fos.close();
-			    		mw.close();
 			    	}catch(IOException e){ 
 			    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
-			    		return;
+			    		return -1;
 			    	}
 			    }
-			try{
-				Thread.sleep(1000);}
-			catch(InterruptedException e){
-				e.printStackTrace();
-				new MessageWindow(parentFrame,"错误！","错误，未知错误！",-1);
-				return;
-			}
-			new MessageWindow(parentFrame,"完成","Done!",1);
+			//hashtable3:已译英文值-中文值，这里认为英文键内部或中文键内部不会出现大小写不同的键
+	        Set<String> keys1 = hashtable1.keySet();  
+	        for(String key: keys1)
+	            if(hashtable2.containsKey(key))
+	            	if(checkModeStatus==1 && hashtable3.containsKey(hashtable1.get(key)) && !hashtable2.get(key).equals(hashtable3.get(hashtable1.get(key))))
+	            		hashtable3.put(hashtable1.get(key),"##Warning:" + hashtable2.get(key));
+	            	else	
+	            		hashtable3.put(hashtable1.get(key),hashtable2.get(key));
 		}
+		//读取文件3，进行操作并输入到文件4
+		try{
+		    fis = new FileInputStream(fileInput3);
+		    isr = new InputStreamReader(fis,"UTF-8");
+	  	    br = new BufferedReader(isr);
+		    file = new File(fileOutput);
+		    if(!file.exists()){
+		    	file.createNewFile();
+		    }
+		    fos = new FileOutputStream(file);
+		    osw = new OutputStreamWriter(fos,"UTF-8");
+	  	    while((str = br.readLine()) != null) {
+	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1){
+	  	    		str1 = str.substring(0,str.indexOf('='));
+	  	    		str2 = str.substring(str.indexOf('=')+1);
+  	    			int warningFlag = 0; 
+  	    			String strTemp;
+	  	    		for(String key:hashtable3.keySet()){
+	  	    			str3 = toLowerInitial(key);
+	  	    			if(str2.indexOf(str3)!=-1){
+	  	    				strTemp = hashtable3.get(key);
+	  	    				if(strTemp.indexOf("##Warning:")==-1)
+	  	    					str2 = str2.replaceAll(str3, strTemp);
+	  	    				else{
+	  	    					warningFlag = 1;
+	  	    					str2 = str2.replaceAll(str3, strTemp.replace("##Warning:", ""));
+	  	    				}
+	  	    			}
+		  	    		str3 = toUpperInitial(key);
+	  	    			if(str2.indexOf(str3)!=-1){
+	  	    				strTemp = hashtable3.get(key);
+	  	    				if(strTemp.indexOf("##Warning:")==-1)
+	  	    					str2 = str2.replaceAll(str3, strTemp);
+	  	    				else{
+	  	    					warningFlag = 1;
+	  	    					str2 = str2.replaceAll(str3, strTemp.replace("##Warning:", ""));
+	  	    				}
+	  	    			}
+	  	    		}
+	  	    		str = str1 + "=" + str2;
+	  	    		str = warningFlag==0?str:"##Warnging:"+str;
+	  	    	}
+	  	    	osw.write(str);
+	  	    	osw.write("\n");
+	  	    }
+	    }catch(FileNotFoundException e){
+				 new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
+				 return -1;
+		    }catch(IOException e){
+				 new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
+				 return -1;
+		    }finally{	 
+		    	try{
+		    		if(bw != null)
+			    		bw.flush();
+		    		br.close();   
+		    		isr.close();      
+		    		fis.close();
+		    		osw.close();
+		    		fos.close();
+		    		mw.close();
+		    	}catch(IOException e){ 
+		    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
+		    		return -1;
+		    	}
+		    }
+		try{
+			Thread.sleep(1000);}
+		catch(InterruptedException e){
+			e.printStackTrace();
+			new MessageWindow(parentFrame,"错误！","错误，未知错误！",-1);
+			return -1;
+		}
+		new MessageWindow(parentFrame,"完成","Done!",1);
+		return 0;
+	}
+	
+	//LA的第6个功能，统计高频词汇
+	public int functionWordCount(){
+		//读取文件，进行操作并输入到文件
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		String str = "";
+		String str1 = "";
+		MessageWindow mw = new MessageWindow(parentFrame,"处理中","",0);
+		try{
+		    fis = new FileInputStream(fileInput1);
+		    isr = new InputStreamReader(fis,"UTF-8");
+	  	    br = new BufferedReader(isr);
+		    file = new File(fileOutput);
+		    if(!file.exists()){
+		    	file.createNewFile();
+		    }
+		    fos = new FileOutputStream(file);
+		    osw = new OutputStreamWriter(fos,"UTF-8");
+	  	    while((str = br.readLine()) != null) {
+	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1){
+	  	    		String[] sArrayTemp;
+	  	    		str1 = str.substring(str.indexOf('=')+1);
+	  	    		sArrayTemp = str1.split(" ");
+	  	    		if(sArrayTemp==null) continue;
+	  	    		for(int i=0;i<sArrayTemp.length;i++){
+	  	    			String sTemp = sArrayTemp[i].toLowerCase();
+	  	    			sTemp = sTemp.replaceAll("\\.","");
+	  	    			sTemp = sTemp.replaceAll(",","");
+	  	    			sTemp = sTemp.replaceAll("\"","");
+	  	    			if(isInFilter(sTemp)) continue;
+	  	    			if(map.containsKey(sTemp))
+	  	    				map.put(sTemp,map.get(sTemp)+1);
+	  	    			else
+	  	    				map.put(sTemp,1);
+	  	    		}
+	  	    	}
+	  	    }
+			List<Map.Entry<String,Integer>> list = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
+			Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {   
+			    public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {      
+			       return (o2.getValue() - o1.getValue()); 
+			    }
+			}); 
+			for(int i=0;i<list.size();i++){
+	  	    	osw.write(list.get(i).toString());
+	  	    	osw.write("\n");
+			}
+	    }catch(FileNotFoundException e){
+				 new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
+				 return -1;
+		    }catch(IOException e){
+				 new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
+				 return -1;
+		    }finally{	 
+		    	try{
+		    		if(bw != null)
+			    		bw.flush();
+		    		br.close();   
+		    		isr.close();      
+		    		fis.close();
+		    		osw.close();
+		    		fos.close();
+		    		mw.close();
+		    	}catch(IOException e){ 
+		    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
+		    		return -1;
+		    	}
+		    }
+		try{
+			Thread.sleep(1000);}
+		catch(InterruptedException e){
+			e.printStackTrace();
+			new MessageWindow(parentFrame,"错误！","错误，未知错误！",-1);
+			return -1;
+		}
+		new MessageWindow(parentFrame,"完成","Done!",1);
+		return 0;
+	}
+	
 }
 

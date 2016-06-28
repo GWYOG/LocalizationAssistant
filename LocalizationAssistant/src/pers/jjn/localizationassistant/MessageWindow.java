@@ -1,4 +1,4 @@
-package pers.jjn.localizationassistant;
+package pers.gwyog.localizationassistant;
 
 import java.awt.Font;
 import java.awt.Image;

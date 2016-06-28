@@ -1,4 +1,4 @@
-package pers.jjn.localizationassistant;
+package pers.gwyog.localizationassistant;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
