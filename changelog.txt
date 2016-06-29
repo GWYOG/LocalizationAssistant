@@ -1,3 +1,12 @@
+#LocalizationAssistant v1.4   2016/6/29
+Add new feature to LA: "updateLocalization" function becomes more customized
+Add new feature to LA: you can now remove the update information directly in "conditionalRemove" function
+Add new feature to LA: add a function that can allow you to replace the untranslated words with the translated ones
+Add new feature to LA: add a function to count the occurence frequency of any words in en_US.lang
+Fix a few bugs: too hard to point them out
+Change the package name: use gwyog instead of jjn
+New release: release LA v1.4
+
 #LocalizationAssistant v1.3   2016/5/5
 Add new features to LA and improve the performance of "updateLocalization" function of LA: add a new update method and add the check mode
 Revert the fix of that "latent bug" in v1.2 since it isn't a bug actually :(
