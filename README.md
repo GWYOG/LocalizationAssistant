@@ -1,10 +1,10 @@
-# LocalizationAssitant
+# LocalizationAssistant
 [![Build Status](https://travis-ci.org/GWYOG/LocalizationAssistant.png)](https://travis-ci.org/GWYOG/LocalizationAssistant)  
 It doesn't support i18n at this moment, so the following README is written in Chinese.
 
 ### What's this?
 
-Localization Assitant，简称LA，是个用java编写的小型软件，为了使本地化Minecraft Mod更加便利而诞生.
+Localization Assistant，简称LA，是个用java编写的小型软件，为了使本地化Minecraft Mod更加便利而诞生.
 
 ### Why it's better than scripts?
 * 由于LA是用java写的，所以基本上来说只要有装JRE，就能使用这个软件，而这对于MC玩家来说应该不成问题.  
@@ -26,7 +26,7 @@ Localization Assitant，简称LA，是个用java编写的小型软件，为了�
 
 ### Downloads
 
-您可以在此仓库的[releases页面](https://github.com/GWYOG/LocalizationAssitant/releases)中找到所有可用版本LA的下载链接. 这个页面将提供LA所有主要版本(即形如x.x的版本)的下载链接，而LA的次要版本(即形如x.x.x的版本)将不被包含在内.
+您可以在此仓库的[releases页面](https://github.com/GWYOG/LocalizationAssistant/releases)中找到所有可用版本LA的下载链接. 这个页面将提供LA所有主要版本(即形如x.x的版本)的下载链接，而LA的次要版本(即形如x.x.x的版本)将不被包含在内.
 
 ### Things you need to pay attention to
 
@@ -34,13 +34,13 @@ Localization Assitant，简称LA，是个用java编写的小型软件，为了�
 
 ### Suggestions
 
-如果您有好的建议，比如对于现有功能的改进或是对于新功能的构思，欢迎在[issues](https://github.com/GWYOG/LocalizationAssitant/issues)页面中向我提出^^
+如果您有好的建议，比如对于现有功能的改进或是对于新功能的构思，欢迎在[issues](https://github.com/GWYOG/LocalizationAssistant/issues)页面中向我提出^^
 
 ### Issue reporting
 
 使用软件遇上bug是常有的事，请及时向我反馈，以便及时修好它.  
-您可以在此仓库的[issues](https://github.com/GWYOG/LocalizationAssitant/issues)页面中向我反馈，如果能使用英文那就更好了:)  
+您可以在此仓库的[issues](https://github.com/GWYOG/LocalizationAssistant/issues)页面中向我反馈，如果能使用英文那就更好了:)  
 我将对您的反馈表示万分的感谢！
 
 ### License
-此项目使用的证书是[GNU General Public License v3.0](https://github.com/GWYOG/LocalizationAssitant/blob/master/LICENSE)，欢迎贡献你的代码！
+此项目使用的证书是[GNU General Public License v3.0](https://github.com/GWYOG/LocalizationAssistant/blob/master/LICENSE)，欢迎贡献你的代码！
