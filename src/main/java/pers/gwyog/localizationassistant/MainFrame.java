@@ -19,12 +19,12 @@ import javax.swing.JTextField;
 public class MainFrame extends JFrame implements ActionListener{
 	
 	/*
-	 *	LAÖ÷´°ÌåµÄGUI²¼ÖÃºÍÊÂ¼ş¼àÌı¼°ÊµÏÖ
+	 *	LAä¸»çª—ä½“çš„GUIå¸ƒç½®å’Œäº‹ä»¶ç›‘å¬åŠå®ç°
 	 * 	@Author: JJN(GWYOG)
 	 */
 	
 	private static final long serialVersionUID = 1L;
-	private JPanel panel1,panel2,panel3,panel4,panel5,panel6,panel7;   	 //Ñ¡Ïî¿¨¶ÔÓ¦µÄÃæ°å
+	private JPanel panel1,panel2,panel3,panel4,panel5,panel6,panel7;   	 //é€‰é¡¹å¡å¯¹åº”çš„é¢æ¿
 	private JPanel panel1_1,panel1_2;
 	private JPanel panel2_1,panel2_2,panel2_3,panel2_3_1,panel2_3_2,panel2_warning,panel2_4,panel2_5,panel2_6,panel2_7;
 	private JPanel panel3_1,panel3_2,panel3_3,panel3_3_1,panel3_3_2,panel3_4,panel3_5;
@@ -60,7 +60,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	private JCheckBox checkBox4_6_1,checkBox4_6_2,checkBox5_4,checkBox5_5,checkBox6_6;
 	private ButtonGroup buttongroup4,buttongroup6;
 	
-	//ÔÚ¹¹Ôì·½·¨ÖĞÊµÏÖLAËùÓĞGUIµÄ²¼ÖÃ
+	//åœ¨æ„é€ æ–¹æ³•ä¸­å®ç°LAæ‰€æœ‰GUIçš„å¸ƒç½®
 	public MainFrame(){
 		super("Localization Assistant v1.4");
 		setSize(592,640);
@@ -163,13 +163,13 @@ public class MainFrame extends JFrame implements ActionListener{
 	    
         //TabbedPane
         tabbedPane = new JTabbedPane(JTabbedPane.LEFT);
-        tabbedPane.addTab("»ù±¾ĞÅÏ¢",null,panel1,"¹ØÓÚLAµÄ»ù±¾ĞÅÏ¢");  
-        tabbedPane.addTab("Ìõ¼şÌæ»»",null,panel2,"¸ù¾İÓÃ»§ĞèÒª£¬ÓĞÌõ¼şµØÌæ»»×Ö·û´®");  
-        tabbedPane.addTab("µÈ¾àÌí¼Ó×Ö·û´®",null,panel3,"Ã¿¸ôÈô¸É¸ö×Ö·û¾Í²åÈëÄ³¸ö×Ö·û´®");  
-        tabbedPane.addTab("¿ÉÓÃÎÄ±¾¸üĞÂ",null,panel4,"½«¾É°æÎÄ±¾ÖĞ¿ÉÓÃµÄÒëÎÄ×Ô¶¯¸üĞÂµ½ĞÂ°æÎÄ±¾ÖĞ");  
-        tabbedPane.addTab("ÖğĞĞÌõ¼şÇåÀí",null,panel5,"É¾³ıÖ¸¶¨×Ö·û´®ºó¸ÃĞĞµÄËùÓĞÄÚÈİ»òÇåÀí±ä¸üĞÅÏ¢");
-        tabbedPane.addTab("ÒÑÒë´ÊÌõÌæ»»",null,panel6,"ÓÃÒÑ¾­·­ÒëµÄ´ÊÌõÌæ»»Î´·­ÒëµÄ²¿·ÖÄÚÈİ");
-        tabbedPane.addTab("¸ßÆµ´Ê»ãÍ³¼Æ",null,panel7,"Í³¼ÆÓ¢ÎÄÎÄ±¾ÖĞµÄ¸ßÆµ´Ê»ã");
+        tabbedPane.addTab("åŸºæœ¬ä¿¡æ¯",null,panel1,"å…³äºLAçš„åŸºæœ¬ä¿¡æ¯");  
+        tabbedPane.addTab("æ¡ä»¶æ›¿æ¢",null,panel2,"æ ¹æ®ç”¨æˆ·éœ€è¦ï¼Œæœ‰æ¡ä»¶åœ°æ›¿æ¢å­—ç¬¦ä¸²");  
+        tabbedPane.addTab("ç­‰è·æ·»åŠ å­—ç¬¦ä¸²",null,panel3,"æ¯éš”è‹¥å¹²ä¸ªå­—ç¬¦å°±æ’å…¥æŸä¸ªå­—ç¬¦ä¸²");  
+        tabbedPane.addTab("å¯ç”¨æ–‡æœ¬æ›´æ–°",null,panel4,"å°†æ—§ç‰ˆæ–‡æœ¬ä¸­å¯ç”¨çš„è¯‘æ–‡è‡ªåŠ¨æ›´æ–°åˆ°æ–°ç‰ˆæ–‡æœ¬ä¸­");  
+        tabbedPane.addTab("é€è¡Œæ¡ä»¶æ¸…ç†",null,panel5,"åˆ é™¤æŒ‡å®šå­—ç¬¦ä¸²åè¯¥è¡Œçš„æ‰€æœ‰å†…å®¹æˆ–æ¸…ç†å˜æ›´ä¿¡æ¯");
+        tabbedPane.addTab("å·²è¯‘è¯æ¡æ›¿æ¢",null,panel6,"ç”¨å·²ç»ç¿»è¯‘çš„è¯æ¡æ›¿æ¢æœªç¿»è¯‘çš„éƒ¨åˆ†å†…å®¹");
+        tabbedPane.addTab("é«˜é¢‘è¯æ±‡ç»Ÿè®¡",null,panel7,"ç»Ÿè®¡è‹±æ–‡æ–‡æœ¬ä¸­çš„é«˜é¢‘è¯æ±‡");
         
         //Buttons
 		button1 = new JButton("Open");
@@ -230,42 +230,42 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		//Labels
 		label1_1 = new JLabel();
-		label1_1.setText("<html><body>×÷Õß:JJN(GWYOG)<br/>°æ±¾ºÅ:v1.4<br/>ÈÕÆÚ:2016/6/29</body></html>");
-		label2_1 = new JLabel("´ı²Ù×÷ÎÄ¼ş:");
-		label2_2 = new JLabel("Êä³öµ½ÎÄ¼ş:");
-		label2_3 = new JLabel("´ıÌæ»»µÄ×Ö·û´®:");			
-		label2_4 = new JLabel("Ìæ»»³ÉµÄ×Ö·û´®:");
-		label2_warning = new JLabel("<html><body>×¢Òâ:´ıÌæ»»µÄ×Ö·û´®¿ÉÒÔÊÇÕıÔò±í´ïÊ½£¡£¡<br/>²»Çå³şµÄ»°¿ÉÒÔ²»ÓÃ¹Ü£¬µ«ÊÇÌæ»»\".\"Ê±ĞèÒªÊäÈë\"\\\\.\"</body></html>");
-		label2_5 = new JLabel("*(´ËÏî¿ÉÎª¿Õ)  ²Ù×÷ĞĞÊı:");
-		label2_5_des = new JLabel("ÓÃ\"Êı×Ö\"»òÊÇ\"Êı×Ö-Êı×Ö\"µÄĞÎÊ½±íÊ¾,ÖĞ¼äÒÔÓ¢ÎÄ¶ººÅ·Ö¸ô,Îª¿Õ´ú±í²Ù×÷ËùÓĞĞĞ");
-		label2_6 = new JLabel("*(´ËÏî¿ÉÎª¿Õ)  Ìæ»»ºöÂÔ·û:");
-		label2_6_des = new JLabel("¸Ã¶Ô×Ö·ûÖĞ¼ä½«²»×÷Ìæ»»(ÒÔ\"-\"·Ö¸ô,Ö»Ö§³ÖÊäÈëÒ»¶Ô×Ö·û¼´\"×Ö·û-×Ö·û\"µÄĞÎÊ½):");
-		label3_1 = new JLabel("´ı²Ù×÷ÎÄ¼ş:");
-		label3_2 = new JLabel("Êä³öµ½ÎÄ¼ş:");
-		label3_3_1 = new JLabel("¼ä¸ô×Ö·û¸öÊı:");
-		label3_3_2 = new JLabel("´ı²åÈëµÄ×Ö·û´®:");
-		label3_4 = new JLabel("*(´ËÏî¿ÉÎª¿Õ)  ²Ù×÷ĞĞÊı:");
-		label3_4_des = new JLabel("ÓÃ\"Êı×Ö\"»òÊÇ\"Êı×Ö-Êı×Ö\"µÄĞÎÊ½±íÊ¾,ÖĞ¼äÒÔÓ¢ÎÄ¶ººÅ·Ö¸ô,Îª¿Õ´ú±í²Ù×÷ËùÓĞĞĞ");
-		label4_1 = new JLabel("¾É°æ±¾ en_US.lang:");
-		label4_2 = new JLabel("¾É°æ±¾ zh_CN.lang:");
-		label4_3 = new JLabel("ĞÂ°æ±¾ en_US.lang:");
-		label4_4 = new JLabel("Êä³öµ½ÎÄ¼ş(ĞÂ°æ±¾ zh_CN.lang):");
-		label4_5 = new JLabel("¸üĞÂ·½Ê½(1±íÊ¾Ìæ»»\"=\"Ç°µÄ²¿·Ö,2±íÊ¾Ìæ»»\"=\"ºóµÄ²¿·Ö):");
-		label4_6 = new JLabel("¸½¼ÓÄ£Ê½:");
-		label5_1 = new JLabel("´ı²Ù×÷ÎÄ¼ş:");
-		label5_2 = new JLabel("Êä³öµ½ÎÄ¼ş:");
-		label5_3 = new JLabel("Çå¿Õ´Ë×Ö·û´®¼°Æä(¿É¸ÄÎª²»¼°Æä)ºó¸ÃĞĞµÄÄÚÈİ:");
-		label5_4 = new JLabel("Çå¿ÕÊ±±£Áô¸Ã×Ö·û´®:");
-		label5_5 = new JLabel("ÇåÀí¸üĞÂĞÅÏ¢(ÓÅÏÈ¼¶¸ü¸ß):");
-		label6_1 = new JLabel("²Î¿¼ÓÃÓ¢ÎÄÎÄ±¾en_US.lang:");
-		label6_2 = new JLabel("°ë³ÉÆ·ÖĞÎÄÎÄ±¾zh_CN.lang:");
-		label6_3 = new JLabel("´ı²Ù×÷µÄ°ë³ÉÆ·ÖĞÎÄÎÄ±¾zh_CN.lang:");
-		label6_4 = new JLabel("Êä³öµ½µÄÎÄ¼ş:");
-		label6_5 = new JLabel("Ìæ»»Ä£Ê½:");
-		label6_6 = new JLabel("¸½¼ÓÄ£Ê½:");
-		label7_1 = new JLabel("´ıÍ³¼Æ¸ßÆµ´Ê»ãµÄen_US.lang");
-		label7_2 = new JLabel("Í³¼Æ½á¹ûÊä³öµ½ÎÄ¼ş:");
-		label7_3 = new JLabel("Í³¼Æ¹ıÂËÆ÷(ÒÔÓ¢ÎÄ¶ººÅ·Ö¸ô,ÔÚ´ËÁĞ±íÖĞµÄµ¥´Ê½«²»ÄÉÈëÍ³¼Æ):");
+		label1_1.setText("<html><body>ä½œè€…:JJN(GWYOG)<br/>ç‰ˆæœ¬å·:v1.4<br/>æ—¥æœŸ:2016/6/29</body></html>");
+		label2_1 = new JLabel("å¾…æ“ä½œæ–‡ä»¶:");
+		label2_2 = new JLabel("è¾“å‡ºåˆ°æ–‡ä»¶:");
+		label2_3 = new JLabel("å¾…æ›¿æ¢çš„å­—ç¬¦ä¸²:");			
+		label2_4 = new JLabel("æ›¿æ¢æˆçš„å­—ç¬¦ä¸²:");
+		label2_warning = new JLabel("<html><body>æ³¨æ„:å¾…æ›¿æ¢çš„å­—ç¬¦ä¸²å¯ä»¥æ˜¯æ­£åˆ™è¡¨è¾¾å¼ï¼ï¼<br/>ä¸æ¸…æ¥šçš„è¯å¯ä»¥ä¸ç”¨ç®¡ï¼Œä½†æ˜¯æ›¿æ¢\".\"æ—¶éœ€è¦è¾“å…¥\"\\\\.\"</body></html>");
+		label2_5 = new JLabel("*(æ­¤é¡¹å¯ä¸ºç©º)  æ“ä½œè¡Œæ•°:");
+		label2_5_des = new JLabel("ç”¨\"æ•°å­—\"æˆ–æ˜¯\"æ•°å­—-æ•°å­—\"çš„å½¢å¼è¡¨ç¤º,ä¸­é—´ä»¥è‹±æ–‡é€—å·åˆ†éš”,ä¸ºç©ºä»£è¡¨æ“ä½œæ‰€æœ‰è¡Œ");
+		label2_6 = new JLabel("*(æ­¤é¡¹å¯ä¸ºç©º)  æ›¿æ¢å¿½ç•¥ç¬¦:");
+		label2_6_des = new JLabel("è¯¥å¯¹å­—ç¬¦ä¸­é—´å°†ä¸ä½œæ›¿æ¢(ä»¥\"-\"åˆ†éš”,åªæ”¯æŒè¾“å…¥ä¸€å¯¹å­—ç¬¦å³\"å­—ç¬¦-å­—ç¬¦\"çš„å½¢å¼):");
+		label3_1 = new JLabel("å¾…æ“ä½œæ–‡ä»¶:");
+		label3_2 = new JLabel("è¾“å‡ºåˆ°æ–‡ä»¶:");
+		label3_3_1 = new JLabel("é—´éš”å­—ç¬¦ä¸ªæ•°:");
+		label3_3_2 = new JLabel("å¾…æ’å…¥çš„å­—ç¬¦ä¸²:");
+		label3_4 = new JLabel("*(æ­¤é¡¹å¯ä¸ºç©º)  æ“ä½œè¡Œæ•°:");
+		label3_4_des = new JLabel("ç”¨\"æ•°å­—\"æˆ–æ˜¯\"æ•°å­—-æ•°å­—\"çš„å½¢å¼è¡¨ç¤º,ä¸­é—´ä»¥è‹±æ–‡é€—å·åˆ†éš”,ä¸ºç©ºä»£è¡¨æ“ä½œæ‰€æœ‰è¡Œ");
+		label4_1 = new JLabel("æ—§ç‰ˆæœ¬ en_US.lang:");
+		label4_2 = new JLabel("æ—§ç‰ˆæœ¬ zh_CN.lang:");
+		label4_3 = new JLabel("æ–°ç‰ˆæœ¬ en_US.lang:");
+		label4_4 = new JLabel("è¾“å‡ºåˆ°æ–‡ä»¶(æ–°ç‰ˆæœ¬ zh_CN.lang):");
+		label4_5 = new JLabel("æ›´æ–°æ–¹å¼(1è¡¨ç¤ºæ›¿æ¢\"=\"å‰çš„éƒ¨åˆ†,2è¡¨ç¤ºæ›¿æ¢\"=\"åçš„éƒ¨åˆ†):");
+		label4_6 = new JLabel("é™„åŠ æ¨¡å¼:");
+		label5_1 = new JLabel("å¾…æ“ä½œæ–‡ä»¶:");
+		label5_2 = new JLabel("è¾“å‡ºåˆ°æ–‡ä»¶:");
+		label5_3 = new JLabel("æ¸…ç©ºæ­¤å­—ç¬¦ä¸²åŠå…¶(å¯æ”¹ä¸ºä¸åŠå…¶)åè¯¥è¡Œçš„å†…å®¹:");
+		label5_4 = new JLabel("æ¸…ç©ºæ—¶ä¿ç•™è¯¥å­—ç¬¦ä¸²:");
+		label5_5 = new JLabel("æ¸…ç†æ›´æ–°ä¿¡æ¯(ä¼˜å…ˆçº§æ›´é«˜):");
+		label6_1 = new JLabel("å‚è€ƒç”¨è‹±æ–‡æ–‡æœ¬en_US.lang:");
+		label6_2 = new JLabel("åŠæˆå“ä¸­æ–‡æ–‡æœ¬zh_CN.lang:");
+		label6_3 = new JLabel("å¾…æ“ä½œçš„åŠæˆå“ä¸­æ–‡æ–‡æœ¬zh_CN.lang:");
+		label6_4 = new JLabel("è¾“å‡ºåˆ°çš„æ–‡ä»¶:");
+		label6_5 = new JLabel("æ›¿æ¢æ¨¡å¼:");
+		label6_6 = new JLabel("é™„åŠ æ¨¡å¼:");
+		label7_1 = new JLabel("å¾…ç»Ÿè®¡é«˜é¢‘è¯æ±‡çš„en_US.lang");
+		label7_2 = new JLabel("ç»Ÿè®¡ç»“æœè¾“å‡ºåˆ°æ–‡ä»¶:");
+		label7_3 = new JLabel("ç»Ÿè®¡è¿‡æ»¤å™¨(ä»¥è‹±æ–‡é€—å·åˆ†éš”,åœ¨æ­¤åˆ—è¡¨ä¸­çš„å•è¯å°†ä¸çº³å…¥ç»Ÿè®¡):");
 		
 		//textFields
 		textField2_1 = new JTextField(40);
@@ -298,13 +298,13 @@ public class MainFrame extends JFrame implements ActionListener{
         //contentPane.setBackground(Color.white);  
         
         //radioButtons
-        radioButton4_5_1 = new JRadioButton("·½Ê½1");
-        radioButton4_5_2 = new JRadioButton("·½Ê½2");
-        radioButton4_5_3 = new JRadioButton("ÏÈ1ºó2");
-        radioButton4_5_4 = new JRadioButton("ÏÈ2ºó1");
-        radioButton4_5_5 = new JRadioButton("ÍêÈ«Æ¥Åä");
-        radioButton6_5_1 = new JRadioButton("ÆÕÍ¨Ìæ»»");
-        radioButton6_5_2 = new JRadioButton("¸ù¾İ\"Ó¢ÎÄ=ÖĞÎÄ\"¸ñÊ½µÄÎÄ¼ş½øĞĞÌæ»»");
+        radioButton4_5_1 = new JRadioButton("æ–¹å¼1");
+        radioButton4_5_2 = new JRadioButton("æ–¹å¼2");
+        radioButton4_5_3 = new JRadioButton("å…ˆ1å2");
+        radioButton4_5_4 = new JRadioButton("å…ˆ2å1");
+        radioButton4_5_5 = new JRadioButton("å®Œå…¨åŒ¹é…");
+        radioButton6_5_1 = new JRadioButton("æ™®é€šæ›¿æ¢");
+        radioButton6_5_2 = new JRadioButton("æ ¹æ®\"è‹±æ–‡=ä¸­æ–‡\"æ ¼å¼çš„æ–‡ä»¶è¿›è¡Œæ›¿æ¢");
         radioButton4_5_1.setSelected(true);
         radioButton6_5_1.setSelected(true);
         radioButton4_5_1.addActionListener(this);
@@ -325,13 +325,13 @@ public class MainFrame extends JFrame implements ActionListener{
         buttongroup6.add(radioButton6_5_2);
         
         //checkBoxs
-        checkBox4_6_1 = new JCheckBox("¿ªÆôĞ£ÑéÄ£Ê½");
+        checkBox4_6_1 = new JCheckBox("å¼€å¯æ ¡éªŒæ¨¡å¼");
         checkBox4_6_1.setEnabled(false);
-        checkBox4_6_2 = new JCheckBox("ÏÔÊ¾±ä¸üĞÅÏ¢");
+        checkBox4_6_2 = new JCheckBox("æ˜¾ç¤ºå˜æ›´ä¿¡æ¯");
         checkBox4_6_2.setEnabled(false);
-        checkBox5_4 = new JCheckBox("±£Áô¸Ã×Ö·û´®");
-        checkBox5_5 = new JCheckBox("ÇåÀí¸üĞÂĞÅÏ¢");
-        checkBox6_6 = new JCheckBox("¿ªÆôĞ£ÑéÄ£Ê½");
+        checkBox5_4 = new JCheckBox("ä¿ç•™è¯¥å­—ç¬¦ä¸²");
+        checkBox5_5 = new JCheckBox("æ¸…ç†æ›´æ–°ä¿¡æ¯");
+        checkBox6_6 = new JCheckBox("å¼€å¯æ ¡éªŒæ¨¡å¼");
         
         //First Main Panel
 		//panel1.add(button1);
@@ -499,12 +499,12 @@ public class MainFrame extends JFrame implements ActionListener{
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);  
 	}
 	
-	//mainº¯Êı
+	//mainå‡½æ•°
 	public static void main(String[] args) {
 		new MainFrame();
 	}
 
-	//ÊµÏÖ¼àÌıµ½µÄÊÂ¼ş
+	//å®ç°ç›‘å¬åˆ°çš„äº‹ä»¶
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String command = e.getActionCommand();
@@ -540,18 +540,18 @@ public class MainFrame extends JFrame implements ActionListener{
 			 }
 		}
 		if(e.getSource() == radioButton6_5_1){
-			label6_1.setText("²Î¿¼ÓÃÓ¢ÎÄÎÄ±¾en_US.lang:");
+			label6_1.setText("å‚è€ƒç”¨è‹±æ–‡æ–‡æœ¬en_US.lang:");
 			textField6_2.setEnabled(true);
 			button6_open2.setEnabled(true);
 		}
 		else if(e.getSource() == radioButton6_5_2){
-			label6_1.setText("Ã¿ĞĞÎª\"Ó¢ÎÄ=ÖĞÎÄ\"ĞÎÊ½µÄutf-8±àÂëÎÄ¼ş:");
+			label6_1.setText("æ¯è¡Œä¸º\"è‹±æ–‡=ä¸­æ–‡\"å½¢å¼çš„utf-8ç¼–ç æ–‡ä»¶:");
 			textField6_2.setText("");
 			textField6_2.setEnabled(false);
 			button6_open2.setEnabled(false);
 		}
 		if(command == "Open"){
-			filedialog_open = new FileDialog(this, "´ò¿ªÎÄ¼ş", FileDialog.LOAD);
+			filedialog_open = new FileDialog(this, "æ‰“å¼€æ–‡ä»¶", FileDialog.LOAD);
 			filedialog_open.setVisible(true);
 			String directory = filedialog_open.getDirectory();
 			String filename = filedialog_open.getFile();
@@ -631,27 +631,27 @@ public class MainFrame extends JFrame implements ActionListener{
 				String fileOutput = textField2_2.getText();
 				String sOrigin = textField2_3.getText();
 				String sTo = textField2_4.getText();
-				if(textField2_5.getText().indexOf("£¬") == -1){
+				if(textField2_5.getText().indexOf("ï¼Œ") == -1){
 					String []rowNumberSplit = {"Blank"};
 					if(!textField2_5.getText().trim().equals("")) 
 						rowNumberSplit = textField2_5.getText().split(",");
 					String []specialIgnoreSymbol = textField2_6.getText().split("-");	
 					if(textField2_6.getText().length()!=3 && textField2_6.getText().length()!=0 && (!(textField2_6.getText().length() == 3 && specialIgnoreSymbol.length!=2)))
-						 new MessageWindow(this,"´íÎó£¡","Ìæ»»ºöÂÔ·ûÊäÈë¸ñÊ½´íÎó£¡",-1);
+						 new MessageWindow(this,"é”™è¯¯ï¼","æ›¿æ¢å¿½ç•¥ç¬¦è¾“å…¥æ ¼å¼é”™è¯¯ï¼",-1);
 					else{	
 						FileModifier fileModifier = new FileModifier(this,fileInput,fileOutput,sOrigin,sTo,rowNumberSplit,specialIgnoreSymbol);
 						fileModifier.functionConditionalReplace();
 					}
 				}
 				else
-					 new MessageWindow(this,"´íÎó£¡","´íÎó,ÇëÊ¹ÓÃÓ¢ÎÄ¶ººÅ·Ö¸ô£¡",-1);
+					 new MessageWindow(this,"é”™è¯¯ï¼","é”™è¯¯,è¯·ä½¿ç”¨è‹±æ–‡é€—å·åˆ†éš”ï¼",-1);
 			}
 			else if(e.getSource() == button3_go){
 				String fileInput = textField3_1.getText();
 				String fileOutput = textField3_2.getText();
 				String sInterval = textField3_3_1.getText();
 				String sAdd = textField3_3_2.getText();
-				if(textField3_4.getText().indexOf("£¬") == -1){
+				if(textField3_4.getText().indexOf("ï¼Œ") == -1){
 					String []rowNumberSplit = {"Blank"};
 					if(!textField3_4.getText().trim().equals("")) 
 						rowNumberSplit = textField3_4.getText().split(",");
@@ -659,7 +659,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					fileModifier.functionAdd();				
 				}
 				else
-					 new MessageWindow(this,"´íÎó£¡","´íÎó,ÇëÊ¹ÓÃÓ¢ÎÄ¶ººÅ·Ö¸ô£¡",-1);
+					 new MessageWindow(this,"é”™è¯¯ï¼","é”™è¯¯,è¯·ä½¿ç”¨è‹±æ–‡é€—å·åˆ†éš”ï¼",-1);
 				
 			}
 			else if(e.getSource() == button4_go){
@@ -696,7 +696,7 @@ public class MainFrame extends JFrame implements ActionListener{
 			else if(e.getSource() == button7_go){
 				String fileInput1 = textField7_1.getText();
 				String fileOutput = textField7_2.getText();
-				if(textField7_3.getText().indexOf("£¬")==-1){
+				if(textField7_3.getText().indexOf("ï¼Œ")==-1){
 					String []filter;
 					filter = textField7_3.getText().split(",");
 					FileModifier fileModifier = new FileModifier(this,fileInput1,fileOutput,filter);
@@ -704,10 +704,10 @@ public class MainFrame extends JFrame implements ActionListener{
 					
 				}
 				else
-					new MessageWindow(this,"´íÎó£¡","´íÎó,ÇëÊ¹ÓÃÓ¢ÎÄ¶ººÅ·Ö¸ô£¡",-1);
+					new MessageWindow(this,"é”™è¯¯ï¼","é”™è¯¯,è¯·ä½¿ç”¨è‹±æ–‡é€—å·åˆ†éš”ï¼",-1);
 			}
 		}
 	}
     private FileDialog filedialog_open;  
-
+    
 }

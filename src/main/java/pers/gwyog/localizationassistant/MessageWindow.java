@@ -12,7 +12,7 @@ import javax.swing.JLabel;
 public class MessageWindow extends JFrame implements ActionListener{
 	
 	/*
-	 *	ÊµÏÖËùÓĞLAµÄĞÅÏ¢ÌáÊ¾¹¦ÄÜ(µÈ´ı¡¢³É¹¦¡¢Ê§°Ü)
+	 *	å®ç°æ‰€æœ‰LAçš„ä¿¡æ¯æç¤ºåŠŸèƒ½(ç­‰å¾…ã€æˆåŠŸã€å¤±è´¥)
 	 *	@Author: JJN(GWYOG)
 	 */
 	
@@ -30,11 +30,11 @@ public class MessageWindow extends JFrame implements ActionListener{
 		int icon_size = 40;
 		switch(imageType){
 			case -1: 
-				directory="resources/error.png";message=messageOrigin;button = new JButton("È·¶¨");button_flag=1;break;
+				directory="src/main/resources/error.png";message=messageOrigin;button = new JButton("ç¡®å®š");button_flag=1;break;
 			case 0: // to-change
-				directory="resources/loading.gif";icon_size = 70;message="waiting...";break;
+				directory="src/main/resources/loading.gif";icon_size = 70;message="waiting...";break;
 			case 1: 
-				directory="resources/complete.png";message="Done!";button = new JButton("È·¶¨");button_flag=1;break;
+				directory="src/main/resources/complete.png";message="Done!";button = new JButton("ç¡®å®š");button_flag=1;break;
 		}
 		this.setSize(300,150);
 		this.setAlwaysOnTop(true);
@@ -47,7 +47,7 @@ public class MessageWindow extends JFrame implements ActionListener{
 		this.setLayout(null);
 		this.getContentPane().add(imageLabel);
 		this.getContentPane().add(label);
-		label.setFont(new Font("Î¢ÈíÑÅºÚ",1,16));
+		label.setFont(new Font("å¾®è½¯é›…é»‘",1,16));
 		if(button_flag == 1)
 		{
 			imageLabel.setBounds(-25, -20, 128, 128);
@@ -69,7 +69,7 @@ public class MessageWindow extends JFrame implements ActionListener{
 	
 	/* 
 	 	public static void main(String[] args) {
-		messageWindow mw = new messageWindow(new mainFrame(),"Íê³É","waiting...",1);
+		messageWindow mw = new messageWindow(new mainFrame(),"å®Œæˆ","waiting...",1);
 	}
 	*/
 

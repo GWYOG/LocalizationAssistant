@@ -7,7 +7,7 @@ import javax.swing.JProgressBar;
 public class ProgressWindow extends JFrame{
 	
 	/*
-	 * 	ÊµÏÖLAµÄ½ø¶ÈÌõÏÔÊ¾
+	 * 	å®ç°LAçš„è¿›åº¦æ¡æ˜¾ç¤º
 	 * 	@Author: JJN(GWYOG)
 	 */
 	
@@ -20,7 +20,7 @@ public class ProgressWindow extends JFrame{
 	
 	
 	public ProgressWindow(MainFrame parentFrame, int maxStageNumber){
-		super("½ø¶È");
+		super("è¿›åº¦");
 		this.maxStageNumber = maxStageNumber;
 		this.parentFrame = parentFrame;
 		
@@ -51,7 +51,7 @@ public class ProgressWindow extends JFrame{
 		{
 			progressBar.setValue(100);
 		    this.dispose();
-			JOptionPane.showMessageDialog(parentFrame, "Done£¡", "Íê³É", JOptionPane.INFORMATION_MESSAGE);
+			JOptionPane.showMessageDialog(parentFrame, "Doneï¼", "å®Œæˆ", JOptionPane.INFORMATION_MESSAGE);
 		}
 		else
 			progressBar.setValue((int)progressValue);
