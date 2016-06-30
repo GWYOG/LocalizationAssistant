@@ -1,5 +1,5 @@
 # LocalizationAssitant
-
+[![Build Status](https://travis-ci.org/GWYOG/LocalizationAssistant.png)](https://travis-ci.org/GWYOG/LocalizationAssistant)  
 It doesn't support i18n at this moment, so the following README is written in Chinese.
 
 ### What's this?
