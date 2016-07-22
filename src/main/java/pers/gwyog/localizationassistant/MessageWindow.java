@@ -62,7 +62,6 @@ public class MessageWindow extends JFrame implements ActionListener{
 			label.setBounds(140,3,250,100);
 		}	
 		this.setVisible(true);
-		this.isAlwaysOnTop();
 		this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE); 
 
 	}
