@@ -648,21 +648,21 @@ public class FileModifier {
 		    fos = new FileOutputStream(file);
 		    osw = new OutputStreamWriter(fos,"UTF-8");
 	  	    while((str = br.readLine()) != null) {
-	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1){
+	  	    	if(str.length()!=0 && (str.startsWith("##") || str.charAt(0) != '#') && str.indexOf('=')!=-1){
 		  	    	if(updateType2 == 1)
 		  	    	{
-		  	    		Pattern pattern = Pattern.compile("##\\S+:");
+		  	    		Pattern pattern = Pattern.compile("##[a-zA-Z]+:");
 		  	    		Matcher matcher = pattern.matcher(str);
 		  	    		if(matcher.find())
 		  	    			str = str.substring(matcher.end());
 		  	    	}
 		  	    	if(updateType1 == 0)
-			  	    	if(str.length()!=0 && str.indexOf(sRemoveFlag)!=-1)
+			  	    	if(str.length()!=0 && !sRemoveFlag.equals("") && str.indexOf(sRemoveFlag)!=-1)
 				    		str1 = str.substring(0,str.indexOf(sRemoveFlag));	
 			  	    	else
 			  	    		str1 = str;
 		  	    	else
-			  	    	if(str.length()!=0 && str.indexOf(sRemoveFlag)!=-1 && (str.indexOf(sRemoveFlag)+sRemoveFlag.length()<str.length()))
+			  	    	if(str.length()!=0 && !sRemoveFlag.equals("") && str.indexOf(sRemoveFlag)!=-1 && (str.indexOf(sRemoveFlag)+sRemoveFlag.length()<str.length()))
 					    	str1 = str.substring(0,str.indexOf(sRemoveFlag)+sRemoveFlag.length());	
 			  	    	else
 			  	    		str1 = str;

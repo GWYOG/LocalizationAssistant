@@ -62,7 +62,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	
 	//在构造方法中实现LA所有GUI的布置
 	public MainFrame(){
-		super("Localization Assistant v1.4");
+		super("Localization Assistant v1.4.1");
 		setSize(592,640);
 		
 		//panels
@@ -230,7 +230,7 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		//Labels
 		label1_1 = new JLabel();
-		label1_1.setText("<html><body>作者:JJN(GWYOG)<br/>版本号:v1.4<br/>日期:2016/6/29</body></html>");
+		label1_1.setText("<html><body>作者:JJN(GWYOG)<br/>版本号:v1.4.1<br/>日期:2016/7/22</body></html>");
 		label2_1 = new JLabel("待操作文件:");
 		label2_2 = new JLabel("输出到文件:");
 		label2_3 = new JLabel("待替换的字符串:");			

@@ -1,3 +1,6 @@
+#LocalizationAssistant v1.4.1	2016/7/22
+Fix a logical error: now LA can clear the update information(i.e. the "##XXXX:" stuff) correctly
+
 #LocalizationAssistant v1.4   2016/6/29
 Add new feature to LA: "updateLocalization" function becomes more customized
 Add new feature to LA: you can now remove the update information directly in "conditionalRemove" function
