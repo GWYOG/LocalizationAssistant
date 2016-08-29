@@ -36,7 +36,6 @@ public class FileModifier {
 	private File file;
 	private FileOutputStream fos;
 	private OutputStreamWriter osw;
-	private BufferedWriter bw;
 	
 	private String fileInput1;
 	private String fileInput2;
@@ -169,7 +168,7 @@ public class FileModifier {
 	
 	//将字符串首字母变为大写
 	public String toUpperInitial(String str){
-		if(str == null || str == "")
+		if(str == null || str.isEmpty())
 			return str;
 		else
 			return str.substring(0,1).toUpperCase()+str.substring(1);
@@ -177,7 +176,7 @@ public class FileModifier {
 	
 	//将字符串首字母变为小写
 	public String toLowerInitial(String str){
-		if(str == null || str == "")
+		if(str == null || str.isEmpty())
 			return str;
 		else
 			return str.substring(0,1).toLowerCase()+str.substring(1);
@@ -261,8 +260,6 @@ public class FileModifier {
 				 return;
 		    }finally{	 
 		    	try{
-		    		if(bw != null)
-			    		bw.flush();
 		    		br.close();   
 		    		isr.close();      
 		    		fis.close();
@@ -385,8 +382,6 @@ public class FileModifier {
 				 return;
 		    }finally{	 
 		    	try{
-		    		if(bw != null)
-			    		bw.flush();
 		    		br.close();   
 		    		isr.close();      
 		    		fis.close();
@@ -793,8 +788,6 @@ public class FileModifier {
 				 return -1;
 		    }finally{	 
 		    	try{
-		    		if(bw != null)
-			    		bw.flush();
 		    		br.close();   
 		    		isr.close();      
 		    		fis.close();
@@ -974,8 +967,6 @@ public class FileModifier {
 				 return -1;
 		    }finally{	 
 		    	try{
-		    		if(bw != null)
-			    		bw.flush();
 		    		br.close();   
 		    		isr.close();      
 		    		fis.close();
@@ -1046,6 +1037,7 @@ public class FileModifier {
 	  	    }
 			List<Map.Entry<String,Integer>> list = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
 			Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {   
+				@Override
 			    public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {      
 			       return (o2.getValue() - o1.getValue()); 
 			    }
@@ -1062,8 +1054,6 @@ public class FileModifier {
 				 return -1;
 		    }finally{	 
 		    	try{
-		    		if(bw != null)
-			    		bw.flush();
 		    		br.close();   
 		    		isr.close();      
 		    		fis.close();
