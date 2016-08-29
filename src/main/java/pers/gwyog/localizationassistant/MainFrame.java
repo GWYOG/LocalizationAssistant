@@ -27,7 +27,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	private JPanel panel1,panel2,panel3,panel4,panel5,panel6,panel7;   	 //选项卡对应的面板
 	private JPanel panel1_1,panel1_2;
 	private JPanel panel2_1,panel2_2,panel2_3,panel2_3_1,panel2_3_2,panel2_warning,panel2_4,panel2_5,panel2_6,panel2_7;
-	private JPanel panel3_1,panel3_2,panel3_3,panel3_3_1,panel3_3_2,panel3_4,panel3_5;
+	private JPanel panel3_1,panel3_2,panel3_3,panel3_3_1,panel3_3_2,panel3_4,panel3_5,panel3_6,panel3_7;
 	private JPanel panel4_1,panel4_2,panel4_3,panel4_4,panel4_5,panel4_6,panel4_7;
 	private JPanel panel5_1,panel5_2,panel5_3,panel5_4,panel5_5,panel5_6;
 	private JPanel panel6_1,panel6_2,panel6_3,panel6_4,panel6_5,panel6_6,panel6_7;
@@ -41,8 +41,8 @@ public class MainFrame extends JFrame implements ActionListener{
 	private JLabel label1_1;
 	private JLabel label2_1,label2_2,label2_3,label2_4,label2_warning,label2_5,label2_6;
 	private JLabel label2_5_des,label2_6_des;
-	private JLabel label3_1,label3_2,label3_3_1,label3_3_2,label3_4;
-	private JLabel label3_4_des;
+	private JLabel label3_1,label3_2,label3_3_1,label3_3_2,label3_4,label3_5,label3_6;
+	private JLabel label3_4_des,label3_5_des,label3_6_des;
 	private JLabel label4_1,label4_2,label4_3,label4_4,label4_5,label4_6;
 	private JLabel label5_1,label5_2,label5_3,label5_4,label5_5;
 	private JLabel label6_1,label6_2,label6_3,label6_4,label6_5,label6_6;
@@ -50,7 +50,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	//private JList list1,list2;				//to-do: auto-merge
 	private JTabbedPane tabbedPane;
 	private JTextField textField2_1,textField2_2,textField2_3,textField2_4,textField2_5,textField2_6;
-	private JTextField textField3_1,textField3_2,textField3_3_1,textField3_3_2,textField3_4;
+	private JTextField textField3_1,textField3_2,textField3_3_1,textField3_3_2,textField3_4,textField3_5,textField3_6;
 	private JTextField textField4_1,textField4_2,textField4_3,textField4_4;
 	private JTextField textField5_1,textField5_2,textField5_3;
 	private JTextField textField6_1,textField6_2,textField6_3,textField6_4;
@@ -62,7 +62,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	
 	//在构造方法中实现LA所有GUI的布置
 	public MainFrame(){
-		super("Localization Assistant v1.4.1");
+		super("Localization Assistant v1.5.2");
 		setSize(592,640);
 		
 		//panels
@@ -92,6 +92,8 @@ public class MainFrame extends JFrame implements ActionListener{
 	    panel3_3_2 = new JPanel();
 	    panel3_4 = new JPanel();
 	    panel3_5 = new JPanel();
+	    panel3_6 = new JPanel();
+	    panel3_7 = new JPanel();
 	    panel4_1 = new JPanel();
 	    panel4_2 = new JPanel();
 	    panel4_3 = new JPanel();
@@ -133,7 +135,9 @@ public class MainFrame extends JFrame implements ActionListener{
 	    panel3_3_1.setLayout(new FlowLayout(FlowLayout.LEFT));
 	    panel3_3_2.setLayout(new FlowLayout(FlowLayout.LEFT));
 	    panel3_4.setLayout(new FlowLayout(FlowLayout.LEFT));
-	    panel3_5.setLayout(new FlowLayout(FlowLayout.CENTER));
+	    panel3_5.setLayout(new FlowLayout(FlowLayout.LEFT));
+	    panel3_6.setLayout(new FlowLayout(FlowLayout.LEFT));
+	    panel3_7.setLayout(new FlowLayout(FlowLayout.CENTER));
 	    panel4_1.setLayout(new FlowLayout(FlowLayout.LEFT));
 	    panel4_2.setLayout(new FlowLayout(FlowLayout.LEFT));
 	    panel4_3.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -230,7 +234,7 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		//Labels
 		label1_1 = new JLabel();
-		label1_1.setText("<html><body>作者:JJN(GWYOG)<br/>版本号:v1.4.1<br/>日期:2016/7/22</body></html>");
+		label1_1.setText("<html><body>作者:JJN(GWYOG)<br/>版本号:v1.5.2<br/>日期:2016/8/29</body></html>");
 		label2_1 = new JLabel("待操作文件:");
 		label2_2 = new JLabel("输出到文件:");
 		label2_3 = new JLabel("待替换的字符串:");			
@@ -246,6 +250,10 @@ public class MainFrame extends JFrame implements ActionListener{
 		label3_3_2 = new JLabel("待插入的字符串:");
 		label3_4 = new JLabel("*(此项可为空)  操作行数:");
 		label3_4_des = new JLabel("用\"数字\"或是\"数字-数字\"的形式表示,中间以英文逗号分隔,为空代表操作所有行");
+		label3_5 = new JLabel("*(此项可为空)  Key(即'='前的那部分)过滤器:");
+		label3_5_des = new JLabel("只操作Key中包含该些字符串之一的条目.中间以英文逗号分隔,为空代表无过滤");
+		label3_6 = new JLabel("*(此项可为空)  替换忽略符:");
+		label3_6_des = new JLabel("该对字符中间将不作替换(以\"-\"分隔,只支持输入一对字符即\"字符-字符\"的形式):");	
 		label4_1 = new JLabel("旧版本 en_US.lang:");
 		label4_2 = new JLabel("旧版本 zh_CN.lang:");
 		label4_3 = new JLabel("新版本 en_US.lang:");
@@ -279,6 +287,8 @@ public class MainFrame extends JFrame implements ActionListener{
 		textField3_3_1 = new JTextField(10);
 		textField3_3_2 = new JTextField(10);
 		textField3_4 = new JTextField(40);
+		textField3_5 = new JTextField(40);
+		textField3_6 = new JTextField(40);
 		textField4_1 = new JTextField(40);
 		textField4_1.setEnabled(false);
 		textField4_2 = new JTextField(40);
@@ -393,8 +403,15 @@ public class MainFrame extends JFrame implements ActionListener{
 		panel3_4.add(label3_4_des);
 		panel3_4.add(textField3_4);
 		panel3.add(panel3_5);
-		panel3_5.add(button3_go);
-		panel3.add(Box.createVerticalStrut(180));
+		panel3_5.add(label3_5);
+		panel3_5.add(label3_5_des);
+		panel3_5.add(textField3_5);
+		panel3.add(panel3_6);
+		panel3_6.add(label3_6);
+		panel3_6.add(label3_6_des);
+		panel3_6.add(textField3_6);
+		panel3.add(panel3_7);
+		panel3_7.add(button3_go);
 		//Fourth Main Panel
 		panel4.setLayout(new BoxLayout(panel4,BoxLayout.Y_AXIS));
 		panel4.add(panel4_1);
@@ -639,7 +656,7 @@ public class MainFrame extends JFrame implements ActionListener{
 					if(textField2_6.getText().length()!=3 && textField2_6.getText().length()!=0 && (!(textField2_6.getText().length() == 3 && specialIgnoreSymbol.length!=2)))
 						 new MessageWindow(this,"错误！","替换忽略符输入格式错误！",-1);
 					else{	
-						FileModifier fileModifier = new FileModifier(this,fileInput,fileOutput,sOrigin,sTo,rowNumberSplit,specialIgnoreSymbol);
+						FileModifier fileModifier = new FileModifier(this,1,fileInput,fileOutput,sOrigin,sTo,null,rowNumberSplit,specialIgnoreSymbol);
 						fileModifier.functionConditionalReplace();
 					}
 				}
@@ -651,12 +668,18 @@ public class MainFrame extends JFrame implements ActionListener{
 				String fileOutput = textField3_2.getText();
 				String sInterval = textField3_3_1.getText();
 				String sAdd = textField3_3_2.getText();
-				if(textField3_4.getText().indexOf("，") == -1){
+				if(textField3_4.getText().indexOf("，") == -1 && textField3_5.getText().indexOf("，") == -1){
 					String []rowNumberSplit = {"Blank"};
 					if(!textField3_4.getText().trim().equals("")) 
 						rowNumberSplit = textField3_4.getText().split(",");
-					FileModifier fileModifier = new FileModifier(this,fileInput,fileOutput,sInterval,sAdd,rowNumberSplit);
-					fileModifier.functionAdd();				
+					String []keyFilter = textField3_5.getText().split(",");
+					String []specialIgnoreSymbol = textField3_6.getText().split("-");	
+					if(textField3_6.getText().length()!=3 && textField3_6.getText().length()!=0 && (!(textField3_6.getText().length() == 3 && specialIgnoreSymbol.length!=2)))
+						 new MessageWindow(this,"错误！","替换忽略符输入格式错误！",-1);
+					else{
+						FileModifier fileModifier = new FileModifier(this,2,fileInput,fileOutput,sInterval,sAdd,keyFilter,rowNumberSplit,specialIgnoreSymbol);
+						fileModifier.functionAdd();	
+					}		
 				}
 				else
 					 new MessageWindow(this,"错误！","错误,请使用英文逗号分隔！",-1);

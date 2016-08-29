@@ -1,3 +1,8 @@
+#LocalizationAssistant v1.5.2   2016/8/29
+v1.5.2 - fix a bug that output file will become blank when the input file and output file are same file  
+v1.5.1 - this function has a key filter now which can filt out the entry which has some key words in its key
+v1.5.0 - the function that automatically adds specific string at a specific interval can now have an ignore-symbol pair
+
 #LocalizationAssistant v1.4.1	2016/7/22
 Fix a logical error: now LA can clear the update information(i.e. the "##XXXX:" stuff) correctly
 

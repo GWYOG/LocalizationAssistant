@@ -21,6 +21,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 
+
 public class FileModifier {
 	
 	/*
@@ -35,8 +36,7 @@ public class FileModifier {
 	private File file;
 	private FileOutputStream fos;
 	private OutputStreamWriter osw;
-	// Field is simply not used at all.
-	// private BufferedWriter bw;
+	private BufferedWriter bw;
 	
 	private String fileInput1;
 	private String fileInput2;
@@ -47,28 +47,29 @@ public class FileModifier {
 	private String sInterval;
 	private String sAdd;
 	private String sRemoveFlag;
+	private String []keyFilter;
 	private String []rowNumberSplit;
 	private String []specialIgnoreSymbol;
 	private String []filter;
 	private int updateType;
     
-	public FileModifier(MainFrame parentFrame,String fileInput,String fileOutput,String sOrigin,String sTo,String []rowNumberSplit,String []specialIgnoreSymbol){
+	public FileModifier(MainFrame parentFrame,int functionNumber,String fileInput,String fileOutput,String str1,String str2,String []keyFilter,String []rowNumberSplit,String []specialIgnoreSymbol){
 		this.parentFrame = parentFrame;
 		this.fileInput1 = fileInput;
 		this.fileOutput = fileOutput;
-		this.sOrigin = sOrigin;
-		this.sTo = sTo;
+		switch(functionNumber){
+		case 1:	
+			this.sOrigin = str1;
+			this.sTo = str2;
+			break;
+		case 2:
+			this.sInterval = str1;
+			this.sAdd = str2;
+			this.keyFilter = keyFilter;
+			break;
+		}
 		this.rowNumberSplit = rowNumberSplit;
 		this.specialIgnoreSymbol = specialIgnoreSymbol;
-	}
-	
-	public FileModifier(MainFrame parentFrame,String fileInput,String fileOutput,String sInterval,String sAdd,String []rowNumberSplit){
-		this.parentFrame = parentFrame;
-		this.fileInput1 = fileInput;
-		this.fileOutput = fileOutput;
-		this.sInterval = sInterval;
-		this.sAdd = sAdd;
-		this.rowNumberSplit = rowNumberSplit;
 	}
 
 	public FileModifier(MainFrame parentFrame,String fileInput1,String fileInput2,String fileInput3,String fileOutput,int updateType){
@@ -93,6 +94,11 @@ public class FileModifier {
 		this.fileInput1 = fileInput1;
 		this.fileOutput = fileOutput;
 		this.filter = filter;
+	}
+	
+	//将文件路径变为缓存文件路径
+	public String dirToTempDir(String directory){
+		return directory.substring(0,directory.lastIndexOf('.'))+"-Temp.lang";
 	}
 	
 	//输入一个int型参数，判断它是否在用户给定的操作行数范围内：不在的话返回-1，在的话返回该行数，如果用户未置顶操作行数的话，默认对所有行操作，此时返回0
@@ -135,6 +141,26 @@ public class FileModifier {
 		return -1;
 	}
 	
+	//判断keyFilter数组中否含有有意义的元素
+	public boolean isKeyFilterOn(){
+		if(keyFilter==null||(keyFilter.length==1&&keyFilter[0].equals("")))
+			return false;
+		else 
+			return true;	
+	}
+	
+	//判断keyFilter数组中是否有字符串在字符串str中
+	public boolean isKeyFilterInStr(String str){
+		//未启用keyFilter表示不进行任何过滤，因此必须返回true
+		if(!isKeyFilterOn())
+			return true;
+		else
+			for(int i=0;i<keyFilter.length;i++)
+				if(str.indexOf(keyFilter[i])!=-1)
+					return true;
+		return false;
+	}
+	
 	//判断一个字符串中是否包含中文
 	public boolean isContainChineseChar(String str){
 		Pattern pattern = Pattern.compile("[\u4e00-\u9fbf]");
@@ -143,7 +169,7 @@ public class FileModifier {
 	
 	//将字符串首字母变为大写
 	public String toUpperInitial(String str){
-		if(str == null || str.isEmpty())
+		if(str == null || str == "")
 			return str;
 		else
 			return str.substring(0,1).toUpperCase()+str.substring(1);
@@ -151,7 +177,7 @@ public class FileModifier {
 	
 	//将字符串首字母变为小写
 	public String toLowerInitial(String str){
-		if(str == null || str.isEmpty())
+		if(str == null || str == "")
 			return str;
 		else
 			return str.substring(0,1).toLowerCase()+str.substring(1);
@@ -171,14 +197,20 @@ public class FileModifier {
 	//LA的第一个功能，条件替换
 	public void functionConditionalReplace(){
 		int lineNumber = 1;
-		 MessageWindow mw = new MessageWindow(parentFrame,"处理中","",0);
+		boolean outputTempFlag = false;
+		MessageWindow mw = new MessageWindow(parentFrame,"处理中","",0);
 		try{
 			String str = "";
 			String str1 = "";
 		    fis = new FileInputStream(fileInput1);
 		    isr = new InputStreamReader(fis,"UTF-8");
 	  	    br = new BufferedReader(isr);
-		    file = new File(fileOutput);
+	  	    if(fileInput1.equals(fileOutput)){
+	  	    	file = new File(dirToTempDir(fileOutput));
+	  	    	outputTempFlag = true;
+	  	    }
+	  	    else
+	  	    	file = new File(fileOutput);
 		    if(!file.exists()){
 		    	file.createNewFile();
 		    }
@@ -229,14 +261,18 @@ public class FileModifier {
 				 return;
 		    }finally{	 
 		    	try{
-//		    		if(bw != null)
-//			    		bw.flush();
+		    		if(bw != null)
+			    		bw.flush();
 		    		br.close();   
 		    		isr.close();      
 		    		fis.close();
 		    		osw.close();
 		    		fos.close();
 		    		mw.close();
+		    		if(outputTempFlag){
+		    			fileDelete(fileOutput);
+		    			file.renameTo(new File(fileOutput));
+		    		}
 		    	}catch(IOException e){ 
 					new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
 					return;
@@ -258,6 +294,7 @@ public class FileModifier {
 		int iInterval;
 		if((iInterval = verifyNumber(sInterval)) == -1)
 			return;
+		boolean outputTempFlag = false;
 		MessageWindow mw = new MessageWindow(parentFrame,"处理中","",0);
 		try{
 			String str = "";
@@ -265,24 +302,67 @@ public class FileModifier {
 		    fis = new FileInputStream(fileInput1);
 		    isr = new InputStreamReader(fis,"UTF-8");
 	  	    br = new BufferedReader(isr);
-		    file = new File(fileOutput);
+	  	    if(fileInput1.equals(fileOutput)){
+	  	    	file = new File(dirToTempDir(fileOutput));
+	  	    	outputTempFlag = true;
+	  	    }
+	  	    else
+	  	    	file = new File(fileOutput);
 		    if(!file.exists()){
 		    	file.createNewFile();
 		    }
 		    fos = new FileOutputStream(file);
 		    osw = new OutputStreamWriter(fos,"UTF-8");
+		    //用'='初始化，因为.lang文件中每行应该不会出现超过一个'='
+		    char specialBegin = '=';
+		    char specialEnd = '=';
+	    	boolean ignoreFlag = true;
+	    	//由于目前只支持使用一对替换忽略符，因此该数组的长度非2即1(即输入为空情形)
+    		if(specialIgnoreSymbol.length == 2){
+    			specialBegin = specialIgnoreSymbol[0].charAt(0);
+    			specialEnd = specialIgnoreSymbol[1].charAt(0);
+    		}
+    		else
+    			ignoreFlag = false;
+	    	int lastCharCountDown = iInterval; 
+	    	int indexBegin = -1;
+	    	int indexEnd = -1;
 	  	    while((str = br.readLine()) != null) {
-	  	    	if(str.length()!=0 && str.charAt(0) != '#' && verifyLineNumber(lineNumber) >= 0 && str.indexOf('=')!=-1)
-		    	{
+	  	    	if(str.length()!=0 && str.charAt(0) != '#' && verifyLineNumber(lineNumber) >= 0 && str.indexOf('=')!=-1 && isKeyFilterInStr(str.substring(0,str.indexOf('='))))
+		    	{	
+		    		//开始操作
 		    		str1 = str.substring(str.indexOf('=')+1);	
 		    		String str2="";
 		    		while(!str1.equals("")){	
-		    			if (str1.length()>iInterval)
+		    			if(str1.length()>lastCharCountDown)
 		    			{
-		    				str2 = str2 + str1.substring(0, iInterval) + sAdd;
-		    				str1 = str1.substring(iInterval);
+		    				if(ignoreFlag)
+		    				{	indexBegin = str1.indexOf(specialBegin);
+		    					if(indexBegin==-1 || indexBegin+1>lastCharCountDown){
+		    						str2 = str2 + str1.substring(0, lastCharCountDown) + sAdd;
+		    						str1 = str1.substring(lastCharCountDown);
+		    						lastCharCountDown = iInterval;
+		    					}
+		    					else{
+		    						indexEnd = str1.indexOf(specialEnd);
+		    						if(indexEnd!=-1){
+		    							str2 = str2 + str1.substring(0, indexEnd+1);
+		    							lastCharCountDown -= indexBegin;
+	    								str1 = str1.substring(indexEnd+1);
+		    						}
+		    						else{
+			    						str2 = str2 + str1.substring(0, lastCharCountDown) + sAdd;
+			    						str1 = str1.substring(lastCharCountDown);
+			    						lastCharCountDown = iInterval;
+		    						}
+		    					}
+		    				}
+		    				else{
+	    						str2 = str2 + str1.substring(0, lastCharCountDown) + sAdd;
+	    						str1 = str1.substring(lastCharCountDown);
+		    				}
 		    			}
-		    			else if(str1.length()<=iInterval)
+		    			else if(str1.length()<=lastCharCountDown)
 		    			{
 		    				str2 = str2 + str1;
 		    				str1 = "";
@@ -305,14 +385,18 @@ public class FileModifier {
 				 return;
 		    }finally{	 
 		    	try{
-//		    		if(bw != null)
-//			    		bw.flush();
+		    		if(bw != null)
+			    		bw.flush();
 		    		br.close();   
 		    		isr.close();      
 		    		fis.close();
 		    		osw.close();
 		    		fos.close();
 		    		mw.close();
+		    		if(outputTempFlag){
+		    			fileDelete(fileOutput);
+		    			file.renameTo(new File(fileOutput));
+		    		}
 		    	}catch(IOException e){ 
 		    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
 		    		return;
@@ -328,6 +412,7 @@ public class FileModifier {
 		new MessageWindow(parentFrame,"完成","Done!",1);
 	}
 	
+	//删除指定文件
 	public void fileDelete(String location){
 		File file = new File(location);
 		if(file.exists())
@@ -358,6 +443,7 @@ public class FileModifier {
 		String str = "";
 		String str1 = "";
 		String str2 = "";
+		boolean outputTempFlag = false;
 		MessageWindow mw = new MessageWindow(parentFrame,"处理中","",0);
 		try{
 		    fis = new FileInputStream(fileInput2);
@@ -392,7 +478,12 @@ public class FileModifier {
 		    fis = new FileInputStream(fileInput3);
 		    isr = new InputStreamReader(fis,"UTF-8");
 	  	    br = new BufferedReader(isr);
-		    file = new File(fileOutput);
+	  	    if(fileInput3.equals(fileOutput)){
+	  	    	file = new File(dirToTempDir(fileOutput));
+	  	    	outputTempFlag = true;
+	  	    }
+	  	    else
+	  	    	file = new File(fileOutput);
 		    if(!file.exists()){
 		    	file.createNewFile();
 		    }
@@ -430,6 +521,10 @@ public class FileModifier {
 		    		fis.close();
 		    		osw.close();
 		    		fos.close();
+					if(outputTempFlag){
+						fileDelete(fileOutput);
+						file.renameTo(new File(fileOutput));
+					}
 		    	}catch(IOException e){ 
 		    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
 		    		return -1;
@@ -514,11 +609,17 @@ public class FileModifier {
             		hashtable3.put(hashtable1.get(key),"##Warning:" + hashtable2.get(key));
             	else	
             		hashtable3.put(hashtable1.get(key),hashtable2.get(key));
+        boolean outputTempFlag = false;
 		try{
 		    fis = new FileInputStream(fileInput3);
 		    isr = new InputStreamReader(fis,"UTF-8");
 	  	    br = new BufferedReader(isr);
-		    file = new File(fileOutput);
+	  	    if(fileInput3.equals(fileOutput)){
+	  	    	file = new File(dirToTempDir(fileOutput));
+	  	    	outputTempFlag = true;
+	  	    }
+	  	    else
+	  	    	file = new File(fileOutput);
 		    if(!file.exists()){
 		    	file.createNewFile();
 		    }
@@ -623,6 +724,10 @@ public class FileModifier {
 		    		fis.close();
 		    		osw.close();
 		    		fos.close();
+					if(outputTempFlag){
+						fileDelete(fileOutput);
+						file.renameTo(new File(fileOutput));
+					}
 		    	}catch(IOException e){ 
 		    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
 		    		return -1;
@@ -636,13 +741,19 @@ public class FileModifier {
 		MessageWindow mw = new MessageWindow(parentFrame,"处理中","",0);
 		int updateType1 = updateType / 10;
 		int updateType2 = updateType % 10;
+		boolean outputTempFlag = false;
 		try{
 			String str = "";
 			String str1 = "";
 		    fis = new FileInputStream(fileInput1);
 		    isr = new InputStreamReader(fis,"UTF-8");
 	  	    br = new BufferedReader(isr);
-		    file = new File(fileOutput);
+	  	    if(fileInput1.equals(fileOutput)){
+	  	    	file = new File(dirToTempDir(fileOutput));
+	  	    	outputTempFlag = true;
+	  	    }
+	  	    else
+	  	    	file = new File(fileOutput);
 		    if(!file.exists()){
 		    	file.createNewFile();
 		    }
@@ -682,14 +793,18 @@ public class FileModifier {
 				 return -1;
 		    }finally{	 
 		    	try{
-//		    		if(bw != null)
-//			    		bw.flush();
+		    		if(bw != null)
+			    		bw.flush();
 		    		br.close();   
 		    		isr.close();      
 		    		fis.close();
 		    		osw.close();
 		    		fos.close();
 		    		mw.close();
+		    		if(outputTempFlag){
+						fileDelete(fileOutput);
+						file.renameTo(new File(fileOutput));
+					}
 		    	}catch(IOException e){ 
 		    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
 		    		return -1;
@@ -801,11 +916,17 @@ public class FileModifier {
 	            		hashtable3.put(hashtable1.get(key),hashtable2.get(key));
 		}
 		//读取文件3，进行操作并输入到文件4
+		boolean outputTempFlag = false;
 		try{
 		    fis = new FileInputStream(fileInput3);
 		    isr = new InputStreamReader(fis,"UTF-8");
 	  	    br = new BufferedReader(isr);
-		    file = new File(fileOutput);
+	  	    if(fileInput3.equals(fileOutput)){
+	  	    	file = new File(dirToTempDir(fileOutput));
+	  	    	outputTempFlag = true;
+	  	    }
+	  	    else
+	  	    	file = new File(fileOutput);
 		    if(!file.exists()){
 		    	file.createNewFile();
 		    }
@@ -853,14 +974,18 @@ public class FileModifier {
 				 return -1;
 		    }finally{	 
 		    	try{
-//		    		if(bw != null)
-//			    		bw.flush();
+		    		if(bw != null)
+			    		bw.flush();
 		    		br.close();   
 		    		isr.close();      
 		    		fis.close();
 		    		osw.close();
 		    		fos.close();
 		    		mw.close();
+					if(outputTempFlag){
+						fileDelete(fileOutput);
+						file.renameTo(new File(fileOutput));
+					}
 		    	}catch(IOException e){ 
 		    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
 		    		return -1;
@@ -883,12 +1008,18 @@ public class FileModifier {
 		Map<String, Integer> map = new HashMap<String, Integer>();
 		String str = "";
 		String str1 = "";
+		boolean outputTempFlag = false;
 		MessageWindow mw = new MessageWindow(parentFrame,"处理中","",0);
-		try{
+		try{			
 		    fis = new FileInputStream(fileInput1);
 		    isr = new InputStreamReader(fis,"UTF-8");
 	  	    br = new BufferedReader(isr);
-		    file = new File(fileOutput);
+	  	    if(fileInput1.equals(fileOutput)){
+	  	    	file = new File(dirToTempDir(fileOutput));
+	  	    	outputTempFlag = true;
+	  	    }
+	  	    else
+	  	    	file = new File(fileOutput);
 		    if(!file.exists()){
 		    	file.createNewFile();
 		    }
@@ -915,8 +1046,7 @@ public class FileModifier {
 	  	    }
 			List<Map.Entry<String,Integer>> list = new ArrayList<Map.Entry<String, Integer>>(map.entrySet());
 			Collections.sort(list, new Comparator<Map.Entry<String, Integer>>() {   
-			    @Override
-				public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {      
+			    public int compare(Map.Entry<String, Integer> o1, Map.Entry<String, Integer> o2) {      
 			       return (o2.getValue() - o1.getValue()); 
 			    }
 			}); 
@@ -932,14 +1062,18 @@ public class FileModifier {
 				 return -1;
 		    }finally{	 
 		    	try{
-//		    		if(bw != null)
-//			    		bw.flush();
+		    		if(bw != null)
+			    		bw.flush();
 		    		br.close();   
 		    		isr.close();      
 		    		fis.close();
 		    		osw.close();
 		    		fos.close();
 		    		mw.close();
+					if(outputTempFlag){
+						fileDelete(fileOutput);
+						file.renameTo(new File(fileOutput));
+					}
 		    	}catch(IOException e){ 
 		    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
 		    		return -1;
