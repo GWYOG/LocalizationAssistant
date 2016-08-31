@@ -4,6 +4,8 @@ import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
@@ -11,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTabbedPane;
@@ -62,7 +65,7 @@ public class MainFrame extends JFrame implements ActionListener{
 	
 	//在构造方法中实现LA所有GUI的布置
 	public MainFrame(){
-		super("Localization Assistant v1.5.2");
+		super("Localization Assistant v1.5.3");
 		setSize(592,640);
 		
 		//panels
@@ -234,7 +237,7 @@ public class MainFrame extends JFrame implements ActionListener{
 		
 		//Labels
 		label1_1 = new JLabel();
-		label1_1.setText("<html><body>作者:JJN(GWYOG)<br/>版本号:v1.5.2<br/>日期:2016/8/29</body></html>");
+		label1_1.setText("<html><body>作者:JJN(GWYOG)<br/>版本号:v1.5.3<br/>日期:2016/8/31</body></html>");
 		label2_1 = new JLabel("待操作文件:");
 		label2_2 = new JLabel("输出到文件:");
 		label2_3 = new JLabel("待替换的字符串:");			
@@ -521,6 +524,35 @@ public class MainFrame extends JFrame implements ActionListener{
 		new MainFrame();
 	}
 
+	//自动填充输出文件名
+	public void autoFill(Object objFrom, Object objTo){
+		if(objFrom instanceof JTextField && objTo instanceof JTextField){
+			String textFrom = ((JTextField)objFrom).getText();
+			String textFromMain = "";
+			String textFromExtension = "";
+			if(textFrom.indexOf('.')==-1)
+				return;
+			else{
+				textFromMain = textFrom.substring(0, textFrom.lastIndexOf('.'));
+				textFromExtension = textFrom.substring(textFrom.lastIndexOf('.'));
+				int i = 1;
+				boolean tempFlag = textFromMain.indexOf("-Output") != -1;
+				String fileName = "";
+				while(true){
+					if(tempFlag)
+						fileName = textFromMain.substring(0,textFromMain.indexOf("-Output")) + "-Output" + i + textFromExtension;
+					else
+						fileName = textFromMain + "-Output" + i + textFromExtension;
+					File file = new File(fileName);
+					if(!file.exists())
+						break;
+					i += 1;
+				}
+				((JTextField)objTo).setText(fileName);
+			}
+		}				
+	}
+	
 	//实现监听到的事件
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -578,6 +610,7 @@ public class MainFrame extends JFrame implements ActionListener{
 			else if(e.getSource() == button2_open1){
 				if(directory != null && filename != null)
 					textField2_1.setText(directory + filename);
+				autoFill(textField2_1,textField2_2);
 			}
 			else if(e.getSource() == button2_open2){
 				if(directory != null && filename != null)
@@ -586,6 +619,7 @@ public class MainFrame extends JFrame implements ActionListener{
 			else if(e.getSource() == button3_open1){
 				if(directory != null && filename != null)
 					textField3_1.setText(directory + filename);
+				autoFill(textField3_1,textField3_2);
 			}
 			else if(e.getSource() == button3_open2){
 				if(directory != null && filename != null)
@@ -598,6 +632,7 @@ public class MainFrame extends JFrame implements ActionListener{
 			else if(e.getSource() == button4_open2){
 				if(directory != null && filename != null)
 					textField4_2.setText(directory + filename);
+				autoFill(textField4_2,textField4_4);
 			}
 			else if(e.getSource() == button4_open3){
 				if(directory != null && filename != null)
@@ -610,6 +645,7 @@ public class MainFrame extends JFrame implements ActionListener{
 			else if(e.getSource() == button5_open1){
 				if(directory != null && filename != null)
 					textField5_1.setText(directory + filename);
+				autoFill(textField5_1,textField5_2);
 			}
 			else if(e.getSource() == button5_open2){
 				if(directory != null && filename != null)
@@ -622,6 +658,7 @@ public class MainFrame extends JFrame implements ActionListener{
 			else if(e.getSource() == button6_open2){
 				if(directory != null && filename != null)
 					textField6_2.setText(directory + filename);
+				autoFill(textField6_2,textField6_4);
 			}
 			else if(e.getSource() == button6_open3){
 				if(directory != null && filename != null)
@@ -634,6 +671,7 @@ public class MainFrame extends JFrame implements ActionListener{
 			else if(e.getSource() == button7_open1){
 				if(directory != null && filename != null)
 					textField7_1.setText(directory + filename);
+				autoFill(textField7_1,textField7_2);
 			}
 			else if(e.getSource() == button7_open2){
 				if(directory != null && filename != null)
@@ -656,12 +694,14 @@ public class MainFrame extends JFrame implements ActionListener{
 					if(textField2_6.getText().length()!=3 && textField2_6.getText().length()!=0 && (!(textField2_6.getText().length() == 3 && specialIgnoreSymbol.length!=2)))
 						 new MessageWindow(this,"错误！","替换忽略符输入格式错误！",-1);
 					else{	
-						FileModifier fileModifier = new FileModifier(this,1,fileInput,fileOutput,sOrigin,sTo,null,rowNumberSplit,specialIgnoreSymbol);
-						fileModifier.functionConditionalReplace();
+						if(!textField2_1.getText().equals(textField2_2.getText())||JOptionPane.showOptionDialog(null, "系统检测到您的输入和输出是同一个文件，这样可能会导致数据丢失，请问是否继续？", "确认是否继续", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null)==0){
+							FileModifier fileModifier = new FileModifier(this,1,fileInput,fileOutput,sOrigin,sTo,null,rowNumberSplit,specialIgnoreSymbol);
+							fileModifier.functionConditionalReplace();
+						}
 					}
 				}
 				else
-					 new MessageWindow(this,"错误！","错误,请使用英文逗号分隔！",-1);
+					 new MessageWindow(this,"错误！","错误,请使用英文逗号分隔！",-1);				
 			}
 			else if(e.getSource() == button3_go){
 				String fileInput = textField3_1.getText();
@@ -677,13 +717,14 @@ public class MainFrame extends JFrame implements ActionListener{
 					if(textField3_6.getText().length()!=3 && textField3_6.getText().length()!=0 && (!(textField3_6.getText().length() == 3 && specialIgnoreSymbol.length!=2)))
 						 new MessageWindow(this,"错误！","替换忽略符输入格式错误！",-1);
 					else{
-						FileModifier fileModifier = new FileModifier(this,2,fileInput,fileOutput,sInterval,sAdd,keyFilter,rowNumberSplit,specialIgnoreSymbol);
-						fileModifier.functionAdd();	
+						if(!textField3_1.getText().equals(textField3_2.getText())||JOptionPane.showOptionDialog(null, "系统检测到您的输入和输出是同一个文件，这样可能会导致数据丢失，请问是否继续？", "确认是否继续", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null)==0){
+							FileModifier fileModifier = new FileModifier(this,2,fileInput,fileOutput,sInterval,sAdd,keyFilter,rowNumberSplit,specialIgnoreSymbol);
+							fileModifier.functionAdd();
+						}
 					}		
 				}
 				else
-					 new MessageWindow(this,"错误！","错误,请使用英文逗号分隔！",-1);
-				
+					 new MessageWindow(this,"错误！","错误,请使用英文逗号分隔！",-1);					
 			}
 			else if(e.getSource() == button4_go){
 				String fileInput1 = textField4_1.getText();
@@ -694,8 +735,10 @@ public class MainFrame extends JFrame implements ActionListener{
 				int checkModeStatus = (updateType == 2 && checkBox4_6_1.isSelected())? 1 : 0;
 				int informationModeStatus = ((updateType == 2 || updateType == 5) && checkBox4_6_2.isSelected())? 1 : 0;
 				updateType = updateType * 100 + checkModeStatus * 10 + informationModeStatus;
-				FileModifier fileModifier = new FileModifier(this,fileInput1,fileInput2,fileInput3,fileOutput,updateType);
-				fileModifier.functionUpdateLocalization();		
+				if(!textField4_2.getText().equals(textField4_4.getText())||JOptionPane.showOptionDialog(null, "系统检测到您的输入和输出是同一个文件，这样可能会导致数据丢失，请问是否继续？", "确认是否继续", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null)==0){
+					FileModifier fileModifier = new FileModifier(this,fileInput1,fileInput2,fileInput3,fileOutput,updateType);
+					fileModifier.functionUpdateLocalization();		
+				}			
 			}
 			else if(e.getSource() == button5_go){
 				String fileInput1 = textField5_1.getText();
@@ -703,8 +746,10 @@ public class MainFrame extends JFrame implements ActionListener{
 				String sRemoveFlag = textField5_3.getText();
 				int flag1 = checkBox5_4.isSelected()?1:0;
 				int flag2 = checkBox5_5.isSelected()?1:0;
-				FileModifier fileModifier = new FileModifier(this,fileInput1,fileOutput,sRemoveFlag,flag1*10+flag2);
-				fileModifier.functionConditionalRemove();		
+				if(!textField5_1.getText().equals(textField5_2.getText())||JOptionPane.showOptionDialog(null, "系统检测到您的输入和输出是同一个文件，这样可能会导致数据丢失，请问是否继续？", "确认是否继续", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null)==0){
+					FileModifier fileModifier = new FileModifier(this,fileInput1,fileOutput,sRemoveFlag,flag1*10+flag2);
+					fileModifier.functionConditionalRemove();		
+				}
 			}
 			else if(e.getSource() == button6_go){
 				String fileInput1 = textField6_1.getText();
@@ -713,8 +758,10 @@ public class MainFrame extends JFrame implements ActionListener{
 				String fileOutput = textField6_4.getText();
 				int updateType = radioButton6_5_1.isSelected()?0:1;
 				int checkModeStatus = checkBox6_6.isSelected()?1:0;
-				FileModifier fileModifier = new FileModifier(this,fileInput1,fileInput2,fileInput3,fileOutput,updateType*10+checkModeStatus);
-				fileModifier.functionAutoReplaceEnglishTextWithChineseTranslation();
+				if(!textField6_2.getText().equals(textField6_4.getText())||JOptionPane.showOptionDialog(null, "系统检测到您的输入和输出是同一个文件，这样可能会导致数据丢失，请问是否继续？", "确认是否继续", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null)==0){
+					FileModifier fileModifier = new FileModifier(this,fileInput1,fileInput2,fileInput3,fileOutput,updateType*10+checkModeStatus);
+					fileModifier.functionAutoReplaceEnglishTextWithChineseTranslation();
+				}
 			}
 			else if(e.getSource() == button7_go){
 				String fileInput1 = textField7_1.getText();
@@ -722,12 +769,13 @@ public class MainFrame extends JFrame implements ActionListener{
 				if(textField7_3.getText().indexOf("，")==-1){
 					String []filter;
 					filter = textField7_3.getText().split(",");
-					FileModifier fileModifier = new FileModifier(this,fileInput1,fileOutput,filter);
-					fileModifier.functionWordCount();
-					
+					if(!textField7_1.getText().equals(textField7_2.getText())||JOptionPane.showOptionDialog(null, "系统检测到您的输入和输出是同一个文件，这样可能会导致数据丢失，请问是否继续？", "确认是否继续", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null)==0){
+						FileModifier fileModifier = new FileModifier(this,fileInput1,fileOutput,filter);
+						fileModifier.functionWordCount();
+					}	
 				}
 				else
-					new MessageWindow(this,"错误！","错误,请使用英文逗号分隔！",-1);
+					new MessageWindow(this,"错误！","错误,请使用英文逗号分隔！",-1);			
 			}
 		}
 	}
