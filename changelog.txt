@@ -1,3 +1,8 @@
+#LocalizationAssistant v1.6.0   2016/9/3
+Add a new feature: LA will now show a log window to show the difference between the comments of the old zh_CN.lang and the new en_US.lang
+Fix a bug that message window is sometimes unable to close  
+Fix a bug that JOptionPane will be shown even when the JTextField is empty
+
 #LocalizationAssistant v1.5.3   2016/8/31
 Add new feature: LA will now auto-fill the output slot wisely after you have selected the input file. 
 Add new feature: LA will now show a confirm dialog when you click the "Go" button with a output file that is the same as the input file.

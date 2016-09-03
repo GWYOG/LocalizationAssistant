@@ -13,6 +13,8 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -51,6 +53,9 @@ public class FileModifier {
 	private String []filter;
 	private int updateType;
     
+	//用作全局变量
+	private List<String> commentList = new LinkedList<>();
+	
 	public FileModifier(MainFrame parentFrame,int functionNumber,String fileInput,String fileOutput,String str1,String str2,String []keyFilter,String []rowNumberSplit,String []specialIgnoreSymbol){
 		this.parentFrame = parentFrame;
 		this.fileInput1 = fileInput;
@@ -190,6 +195,14 @@ public class FileModifier {
 				if(filter[i].toLowerCase().equals(str))
 					return true;
 		return false;
+	}
+	
+	//从List中删除全部指定字符串
+	public void deleteElementFromList(String str, List<String> list){
+		for(Iterator<String> iter=list.iterator();iter.hasNext();){
+			if(iter.next().equals(str))
+				iter.remove();
+		}
 	}
 	
 	//LA的第一个功能，条件替换
@@ -415,7 +428,11 @@ public class FileModifier {
 	
 	//LA的第三个功能，自动更新本地化文本
 	public void functionUpdateLocalization(){
-		String tempOutput = fileOutput.substring(0,fileOutput.lastIndexOf('.'))+"TempLocalizationAssistantUpdateLocalization.txt";
+		String tempOutput;
+		if(!fileOutput.isEmpty())
+			tempOutput = fileOutput.substring(0,fileOutput.lastIndexOf('.'))+"TempLocalizationAssistantUpdateLocalization.txt";
+		else
+			return;
 		int status1=0,status2=0;
 		int informationModeStatus = updateType % 10;
 		int checkModeStatus = (updateType / 10) % 10;
@@ -427,8 +444,17 @@ public class FileModifier {
 		case 4:status2=functionUpdateLocalization(fileInput1,fileInput2,fileInput3,tempOutput,0,checkModeStatus,informationModeStatus);status1=functionUpdateLocalization(fileInput2,tempOutput,fileOutput);fileDelete(tempOutput);break;
 		case 5:status2=functionUpdateLocalization(fileInput1,fileInput2,fileInput3,fileOutput,1,checkModeStatus,informationModeStatus);break;
 		}
-		if(status1==0 && status2==0)
-			new MessageWindow(parentFrame,"完成","Done!",1);
+		LogWindow lw;
+		if(status1==0 && status2==0){
+			if(commentList.size()>0){
+				lw = new LogWindow("更新完毕&警告信息");
+				lw.label.setText("<html><body>更新完毕！但LA检测到旧版zh_CN.lang中有新版en_US.lang中没有的"+commentList.size()+"处注释，<br/>这些内容未被更新，但可能是之前汉化者留下的提示信息，请手动校验它们。</body></html>");
+				for(String comment: commentList)
+					lw.textArea.append(comment+"\n");
+			}
+			else
+				new MessageWindow(parentFrame,"完成","Done!",1);
+		}
 	}
 	
 	//功能三重载方法1
@@ -444,26 +470,31 @@ public class FileModifier {
 		    isr = new InputStreamReader(fis,"UTF-8");
 	  	    br = new BufferedReader(isr);
 	  	    while((str = br.readLine()) != null) {
-	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1)
+	  	    	if(str.length()!=0 && !str.startsWith("#") && !str.startsWith("//") && str.indexOf('=')!=-1)
 		    	{   
 	  	    		//hashtable存放旧版zh_CN.lang的旧版键-旧版中文值
 		    		str1 = str.substring(0,str.indexOf('=')).toLowerCase();	
 		    		str2 = str.substring(str.indexOf('=')+1);
 		    		hashtable.put(str1,str2);
 		    	}
+	  	    	else if(str.length()!=0 && (str.startsWith("#")||str.startsWith("//")))
+	  	    		commentList.add(str);
 		    }
 		    }catch(FileNotFoundException e){
-				 new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
-				 return -1;
+		    	mw.close();
+				new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
+				return -1;
 		    }catch(IOException e){
-				 new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
-				 return -1;
-		    }finally{	 
+		    	mw.close();
+				new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
+				return -1;
+		    }finally{	
 		    	try{
 		    		br.close();   
 		    		isr.close();      
 		    		fis.close();
-		    	}catch(IOException e){ 
+		    	}catch(Exception e){ 
+		    		mw.close();
 		    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
 		    		return -1;
 		    	}
@@ -484,7 +515,7 @@ public class FileModifier {
 		    fos = new FileOutputStream(file);
 		    osw = new OutputStreamWriter(fos,"UTF-8");
 	  	    while((str = br.readLine()) != null) {
-	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1)
+	  	    	if(str.length()!=0 && !str.startsWith("#") && !str.startsWith("//") && str.indexOf('=')!=-1)
 		    	{	
 	  	    		//判断新版en_US.lang中新版键是否和hashtable中的旧版键一样. 如果一样，则用旧版的中文值替换新版的英文值
 		    		str1 = str.substring(0,str.indexOf('='));	
@@ -497,16 +528,20 @@ public class FileModifier {
 		    	}
 	  	    	else
 	  	    	{
+	  	    		if(str.length()!=0 && (str.startsWith("#")||str.startsWith("//")))
+	  	    			deleteElementFromList(str, commentList);
 	  	    		osw.write(str);
 	  	    		osw.write("\n");
 	  	    	}
 		    }
 		    }catch(FileNotFoundException e){
-				 new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
-				 return -1;
+		    	mw.close();
+				new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
+				return -1;
 		    }catch(IOException e){
-				 new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
-				 return -1;
+		    	mw.close();
+				new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
+				return -1;
 		    }finally{	 
 				mw.close();
 		    	try{
@@ -519,7 +554,7 @@ public class FileModifier {
 						fileDelete(fileOutput);
 						file.renameTo(new File(fileOutput));
 					}
-		    	}catch(IOException e){ 
+		    	}catch(Exception e){ 
 		    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
 		    		return -1;
 		    	}
@@ -542,7 +577,7 @@ public class FileModifier {
 		    isr = new InputStreamReader(fis,"UTF-8");
 	  	    br = new BufferedReader(isr);
 	  	    while((str = br.readLine()) != null) {
-	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1)
+	  	    	if(str.length()!=0 && !str.startsWith("#") && !str.startsWith("//") && str.indexOf('=')!=-1)
 		    	{	
 	  	    		//hashtable1:英文文本旧版小写键-旧版小写英文值
 		    		str1 = str.substring(0,str.indexOf('=')).toLowerCase();	
@@ -551,17 +586,20 @@ public class FileModifier {
 		    	}
 		    }
 		    }catch(FileNotFoundException e){
-				 new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
-				 return -1;
+		    	mw.close();
+				new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
+				return -1;
 		    }catch(IOException e){
-				 new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
-				 return -1;
-		    }finally{	 
+		    	mw.close();
+		    	new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
+				return -1;
+		    }finally{
 		    	try{
 		    		br.close();   
 		    		isr.close();      
 		    		fis.close();
-		    	}catch(IOException e){ 
+		    	}catch(Exception e){ 
+		    		mw.close();
 		    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
 		    		return -1;
 		    	}
@@ -571,26 +609,31 @@ public class FileModifier {
 		    isr = new InputStreamReader(fis,"UTF-8");
 	  	    br = new BufferedReader(isr);
 	  	    while((str = br.readLine()) != null) {
-	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1 && str.indexOf('=')!=str.length()-1)
+	  	    	if(str.length()!=0 && !str.startsWith("#") && !str.startsWith("//") && str.indexOf('=')!=-1 && str.indexOf('=')!=str.length()-1)
 		    	{
 	  	    		//hashtable2:旧版中文文本小写键-值
 		    		str1 = str.substring(0,str.indexOf('=')).toLowerCase();	
 		    		str2 = str.substring(str.indexOf('=')+1);
 		    		hashtable2.put(str1,str2);
 		    	}
+	  	    	else if((updateType==2||updateType==5) && str.length()!=0 && (str.startsWith("#")||str.startsWith("//")))
+	  	    		commentList.add(str);
 		    }
 		    }catch(FileNotFoundException e){
-				 new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
-				 return -1;
+		    	mw.close();
+				new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
+				return -1;
 		    }catch(IOException e){
-				 new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
-				 return -1;
-		    }finally{	 
+		    	mw.close();
+				new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
+				return -1;
+		    }finally{
 		    	try{
 		    		br.close();   
 		    		isr.close();      
 		    		fis.close();
-		    	}catch(IOException e){ 
+		    	}catch(Exception e){ 
+		    		mw.close();
 		    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
 		    		return -1;
 		    	}
@@ -620,7 +663,7 @@ public class FileModifier {
 		    fos = new FileOutputStream(file);
 		    osw = new OutputStreamWriter(fos,"UTF-8");
 	  	    while((str = br.readLine()) != null) {
-	  	    	if(str.length()!=0 && str.charAt(0) != '#' && str.indexOf('=')!=-1)
+	  	    	if(str.length()!=0 && !str.startsWith("#") && !str.startsWith("//") && str.indexOf('=')!=-1)
 		    	{	
 	  	    		if(doubleCheckFlag == 0)
 	  	    		{
@@ -658,8 +701,8 @@ public class FileModifier {
 			    			osw.write("\n");
 		    			}
 	  	    		}
-	  	    		else
-	  	    		{
+	  	    		else if(doubleCheckFlag == 1)
+	  	    		{	
 	  	    			if(informationModeStatus == 0)
 	  	    			{
 				    		str1 = str.substring(str.indexOf('=')+1);
@@ -699,17 +742,21 @@ public class FileModifier {
 	  	    		}
 		    	}
 	  	    	else
-	  	    	{
+	  	    	{	
+	  	    		if((updateType==2||updateType==5) && str.length()!=0 && (str.startsWith("#")||str.startsWith("//")))
+	  	    			deleteElementFromList(str, commentList);
 	  	    		osw.write(str);
 	  	    		osw.write("\n");
 	  	    	}
 		    }
 		    }catch(FileNotFoundException e){
-				 new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
-				 return -1;
+		    	mw.close();
+				new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
+				return -1;
 		    }catch(IOException e){
-				 new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
-				 return -1;
+		    	mw.close();
+				new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
+				return -1;
 		    }finally{	 
 				mw.close();
 		    	try{
@@ -722,7 +769,7 @@ public class FileModifier {
 						fileDelete(fileOutput);
 						file.renameTo(new File(fileOutput));
 					}
-		    	}catch(IOException e){ 
+		    	}catch(Exception e){ 
 		    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
 		    		return -1;
 		    	}
@@ -851,17 +898,19 @@ public class FileModifier {
 		    	}
 		    }
 		    }catch(FileNotFoundException e){
-				 new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
-				 return -1;
+		    	mw.close();
+				new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
+				return -1;
 		    }catch(IOException e){
-				 new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
-				 return -1;
+				new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
+				return -1;
 		    }finally{	 
 		    	try{
 		    		br.close();   
 		    		isr.close();      
 		    		fis.close();
-		    	}catch(IOException e){ 
+		    	}catch(Exception e){ 
+		    		mw.close();
 		    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
 		    		return -1;
 		    	}
@@ -883,17 +932,19 @@ public class FileModifier {
 			    	}
 			    }
 			    }catch(FileNotFoundException e){
-					 new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
-					 return -1;
+			    	mw.close();
+					new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
+					return -1;
 			    }catch(IOException e){
-					 new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
-					 return -1;
+					new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
+					return -1;
 			    }finally{	 
 			    	try{
 			    		br.close();   
 			    		isr.close();      
 			    		fis.close();
-			    	}catch(IOException e){ 
+			    	}catch(Exception e){ 
+			    		mw.close();
 			    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
 			    		return -1;
 			    	}
@@ -959,11 +1010,13 @@ public class FileModifier {
 	  	    	osw.write("\n");
 	  	    }
 	    }catch(FileNotFoundException e){
-				 new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
-				 return -1;
+	    		mw.close();
+				new MessageWindow(parentFrame,"错误！","错误，找不到指定文件！",-1);
+				return -1;
 		    }catch(IOException e){
-				 new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
-				 return -1;
+		    	mw.close();
+		    	new MessageWindow(parentFrame,"错误！","错误，读取文件失败",-1);
+				return -1;
 		    }finally{	 
 		    	try{
 		    		br.close();   
@@ -976,7 +1029,8 @@ public class FileModifier {
 						fileDelete(fileOutput);
 						file.renameTo(new File(fileOutput));
 					}
-		    	}catch(IOException e){ 
+		    	}catch(Exception e){ 
+		    		mw.close();
 		    		new MessageWindow(parentFrame,"错误！","错误，关闭数据流失败！",-1);
 		    		return -1;
 		    	}
@@ -985,6 +1039,7 @@ public class FileModifier {
 			Thread.sleep(1000);}
 		catch(InterruptedException e){
 			e.printStackTrace();
+			mw.close();
 			new MessageWindow(parentFrame,"错误！","错误，未知错误！",-1);
 			return -1;
 		}
