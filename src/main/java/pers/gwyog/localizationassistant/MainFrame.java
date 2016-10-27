@@ -261,7 +261,7 @@ public class MainFrame extends JFrame implements ActionListener{
 		label4_2 = new JLabel("旧版本 zh_CN.lang:");
 		label4_3 = new JLabel("新版本 en_US.lang:");
 		label4_4 = new JLabel("输出到文件(新版本 zh_CN.lang):");
-		label4_5 = new JLabel("更新方式(1表示替换\"=\"前的部分,2表示替换\"=\"后的部分):");
+		label4_5 = new JLabel("更新方式(1表示比较\"=\"前的部分,2表示比较\"=\"后的部分):");
 		label4_6 = new JLabel("附加模式:");
 		label5_1 = new JLabel("待操作文件:");
 		label5_2 = new JLabel("输出到文件:");
