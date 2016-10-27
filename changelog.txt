@@ -1,3 +1,6 @@
+#LocalizationAssistant v1.6.1   2016/10/27
+Revise some describing words on a JLabel to make the sentence more understandable.
+
 #LocalizationAssistant v1.6.0   2016/9/3
 Add a new feature: LA will now show a log window to show the difference between the comments of the old zh_CN.lang and the new en_US.lang
 Fix a bug that message window is sometimes unable to close  
