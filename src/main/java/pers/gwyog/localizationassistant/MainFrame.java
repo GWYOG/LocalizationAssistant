@@ -242,7 +242,7 @@ public class MainFrame extends JFrame implements ActionListener{
         label2_2 = new JLabel("输出到文件:");
         label2_3 = new JLabel("待替换的字符串:");            
         label2_4 = new JLabel("替换成的字符串:");
-        label2_warning = new JLabel("<html><body>注意:待替换的字符串可以是正则表达式！！<br/>不清楚的话可以不用管，但是替换\".\"时需要输入\"\\\\.\"</body></html>");
+        label2_warning = new JLabel("<html><body>注意:待替换的字符串可以是正则表达式！！<br/>不清楚的话可以不用管，但是替换\".\"时需要输入\"\\.\"</body></html>");
         label2_5 = new JLabel("*(此项可为空)  操作行数:");
         label2_5_des = new JLabel("用\"数字\"或是\"数字-数字\"的形式表示,中间以英文逗号分隔,为空代表操作所有行");
         label2_6 = new JLabel("*(此项可为空)  替换忽略符:");
