@@ -658,11 +658,11 @@ public class MainFrame extends JFrame implements ActionListener{
             else if(e.getSource() == button6_open2){
                 if(directory != null && filename != null)
                     textField6_2.setText(directory + filename);
-                autoFill(textField6_2,textField6_4);
             }
             else if(e.getSource() == button6_open3){
                 if(directory != null && filename != null)
                     textField6_3.setText(directory + filename);
+                autoFill(textField6_3,textField6_4);
             }
             else if(e.getSource() == button6_open4){
                 if(directory != null && filename != null)
@@ -762,7 +762,7 @@ public class MainFrame extends JFrame implements ActionListener{
                 String fileOutput = textField6_4.getText();
                 int updateType = radioButton6_5_1.isSelected()?0:1;
                 int checkModeStatus = checkBox6_6.isSelected()?1:0;
-                if(!textField6_2.getText().isEmpty())
+                if(updateType == 1 || !textField6_2.getText().isEmpty())
                     if(!textField6_2.getText().equals(textField6_4.getText())||JOptionPane.showOptionDialog(null, "系统检测到您的输入和输出是同一个文件，这样可能会导致数据丢失，请问是否继续？", "确认是否继续", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null)==0){
                         FileModifier fileModifier = new FileModifier(this,fileInput1,fileInput2,fileInput3,fileOutput,updateType*10+checkModeStatus);
                         fileModifier.functionAutoReplaceEnglishTextWithChineseTranslation();
