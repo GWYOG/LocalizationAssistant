@@ -86,13 +86,15 @@ public class FileModifier {
         this.updateType = updateType;
     }
 
-    public FileModifier(MainFrame parentFrame, String fileInput1, String fileOutput, String sRemoveFlag, int flag) {
+    public FileModifier(MainFrame parentFrame, String fileInput1, String fileOutput, String sRemoveFlag,
+			String[] rowNumberSplit, int flag) {
         this.parentFrame = parentFrame;
         this.fileInput1 = fileInput1;
         this.fileOutput = fileOutput;
         this.sRemoveFlag = sRemoveFlag;
+        this.rowNumberSplit = rowNumberSplit;
         this.updateType = flag;
-    }
+	}
 
     public FileModifier(MainFrame parentFrame, String fileInput1, String fileOutput, String[] filter) {
         this.parentFrame = parentFrame;
@@ -101,12 +103,12 @@ public class FileModifier {
         this.filter = filter;
     }
 
-    // 将文件路径变为缓存文件路径
+	// 将文件路径变为缓存文件路径
     public String dirToTempDir(String directory) {
         return directory.substring(0, directory.lastIndexOf('.')) + "-Temp.lang";
     }
 
-    // 输入一个int型参数，判断它是否在用户给定的操作行数范围内：不在的话返回-1，在的话返回该行数，如果用户未置顶操作行数的话，默认对所有行操作，此时返回0
+    // 输入一个int型参数，判断它是否在用户给定的操作行数范围内：不在的话返回-1，在的话返回该行数，如果用户未指定操作行数的话，默认对所有行操作，此时返回0
     public int verifyLineNumber(int lineNumber) {
         if (rowNumberSplit[0].equals("Blank"))
             return 0;
@@ -765,6 +767,7 @@ public class FileModifier {
     // LA的第四个功能，逐行条件清理
     public int functionConditionalRemove() {
         MessageWindow mw = new MessageWindow(parentFrame, "处理中", "", 0);
+        int lineNumber = 1;
         int updateType1 = updateType / 10;
         int updateType2 = updateType % 10;
         boolean outputTempFlag = false;
@@ -785,28 +788,38 @@ public class FileModifier {
             fos = new FileOutputStream(file);
             osw = new OutputStreamWriter(fos, "UTF-8");
             while ((str = br.readLine()) != null) {
-                if (str.length() != 0 && (str.startsWith("##") || str.charAt(0) != '#') && str.indexOf('=') != -1) {
-                    if (updateType2 == 1) {
-                        Pattern pattern = Pattern.compile("##[a-zA-Z]+:");
-                        Matcher matcher = pattern.matcher(str);
-                        if (matcher.find())
-                            str = str.substring(matcher.end());
-                    }
-                    if (updateType1 == 0)
-                        if (str.length() != 0 && !sRemoveFlag.equals("") && str.indexOf(sRemoveFlag) != -1)
-                            str1 = str.substring(0, str.indexOf(sRemoveFlag));
-                        else
-                            str1 = str;
-                    else if (str.length() != 0 && !sRemoveFlag.equals("") && str.indexOf(sRemoveFlag) != -1
-                            && (str.indexOf(sRemoveFlag) + sRemoveFlag.length() < str.length()))
-                        str1 = str.substring(0, str.indexOf(sRemoveFlag) + sRemoveFlag.length());
-                    else
-                        str1 = str;
-
+            	boolean lineFeedFlag = true;
+                if (verifyLineNumber(lineNumber) >= 0) {
+                    if (sRemoveFlag.isEmpty()) {
+                    	str1 = "";
+                    	if (updateType == 0)
+                    		lineFeedFlag = false;
+                    } else if (!str.startsWith("//") && (!str.startsWith("#") || str.startsWith("##"))) {
+                        if (updateType2 == 1) {
+                            Pattern pattern = Pattern.compile("##[a-zA-Z]+:");
+                            Matcher matcher = pattern.matcher(str);
+                            if (matcher.find())
+                                str = str.substring(matcher.end());
+                        }	
+                        if (updateType1 == 0) {
+                            if (str.length() != 0 && str.indexOf(sRemoveFlag) != -1)
+                                str1 = str.substring(0, str.indexOf(sRemoveFlag));
+                            else
+                                str1 = str;
+                        } else { 
+                        	if (str.length() != 0 && str.indexOf(sRemoveFlag) != -1
+                                && (str.indexOf(sRemoveFlag) + sRemoveFlag.length() < str.length()))
+                        		str1 = str.substring(0, str.indexOf(sRemoveFlag) + sRemoveFlag.length());
+                        	else
+                        		str1 = str;
+                        }
+                    } else
+                    	str1 = str;
                 } else
                     str1 = str;
-                osw.write(str1);
-                osw.write("\n");
+            	osw.write(str1);
+                if (lineFeedFlag) osw.write("\n"); 
+                lineNumber++;
             }
         } catch (FileNotFoundException e) {
             new MessageWindow(parentFrame, "错误！", "错误，找不到指定文件！", -1);

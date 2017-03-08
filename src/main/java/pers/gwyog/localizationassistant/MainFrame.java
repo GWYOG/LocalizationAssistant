@@ -34,7 +34,7 @@ public class MainFrame extends JFrame implements ActionListener {
             panel2_7;
     private JPanel panel3_1, panel3_2, panel3_3, panel3_3_1, panel3_3_2, panel3_4, panel3_5, panel3_6, panel3_7;
     private JPanel panel4_1, panel4_2, panel4_3, panel4_4, panel4_5, panel4_6, panel4_7;
-    private JPanel panel5_1, panel5_2, panel5_3, panel5_4, panel5_5, panel5_6;
+    private JPanel panel5_1, panel5_2, panel5_3, panel5_4, panel5_5, panel5_6, panel5_7;
     private JPanel panel6_1, panel6_2, panel6_3, panel6_4, panel6_5, panel6_6, panel6_7;
     private JPanel panel7_1, panel7_2, panel7_3, panel7_4;
     private JButton button1, button2, button2_go, button2_open1, button2_open2;
@@ -49,7 +49,7 @@ public class MainFrame extends JFrame implements ActionListener {
     private JLabel label3_1, label3_2, label3_3_1, label3_3_2, label3_4, label3_5, label3_6;
     private JLabel label3_4_des, label3_5_des, label3_6_des;
     private JLabel label4_1, label4_2, label4_3, label4_4, label4_5, label4_6;
-    private JLabel label5_1, label5_2, label5_3, label5_4, label5_5;
+    private JLabel label5_1, label5_2, label5_3, label5_4, label5_4_des, label5_5, label5_6;
     private JLabel label6_1, label6_2, label6_3, label6_4, label6_5, label6_6;
     private JLabel label7_1, label7_2, label7_3;
     // private JList list1,list2; //to-do: auto-merge
@@ -58,7 +58,7 @@ public class MainFrame extends JFrame implements ActionListener {
     private JTextField textField3_1, textField3_2, textField3_3_1, textField3_3_2, textField3_4, textField3_5,
             textField3_6;
     private JTextField textField4_1, textField4_2, textField4_3, textField4_4;
-    private JTextField textField5_1, textField5_2, textField5_3;
+    private JTextField textField5_1, textField5_2, textField5_3, textField5_4;
     private JTextField textField6_1, textField6_2, textField6_3, textField6_4;
     private JTextField textField7_1, textField7_2, textField7_3;
     private JRadioButton radioButton4_5_1, radioButton4_5_2, radioButton4_5_3, radioButton4_5_4, radioButton4_5_5;
@@ -110,9 +110,10 @@ public class MainFrame extends JFrame implements ActionListener {
         panel5_1 = new JPanel();
         panel5_2 = new JPanel();
         panel5_3 = new JPanel();
-        panel5_4 = new JPanel();
         panel5_5 = new JPanel();
         panel5_6 = new JPanel();
+        panel5_7 = new JPanel();
+        panel5_4 = new JPanel();
         panel6_1 = new JPanel();
         panel6_2 = new JPanel();
         panel6_3 = new JPanel();
@@ -154,9 +155,10 @@ public class MainFrame extends JFrame implements ActionListener {
         panel5_1.setLayout(new FlowLayout(FlowLayout.LEFT));
         panel5_2.setLayout(new FlowLayout(FlowLayout.LEFT));
         panel5_3.setLayout(new FlowLayout(FlowLayout.LEFT));
-        panel5_4.setLayout(new FlowLayout(FlowLayout.LEFT));
         panel5_5.setLayout(new FlowLayout(FlowLayout.LEFT));
-        panel5_6.setLayout(new FlowLayout(FlowLayout.CENTER));
+        panel5_6.setLayout(new FlowLayout(FlowLayout.LEFT));
+        panel5_7.setLayout(new FlowLayout(FlowLayout.CENTER));
+        panel5_4.setLayout(new FlowLayout(FlowLayout.LEFT));
         panel6_1.setLayout(new FlowLayout(FlowLayout.LEFT));
         panel6_2.setLayout(new FlowLayout(FlowLayout.LEFT));
         panel6_3.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -270,8 +272,10 @@ public class MainFrame extends JFrame implements ActionListener {
         label5_1 = new JLabel("待操作文件:");
         label5_2 = new JLabel("输出到文件:");
         label5_3 = new JLabel("清空此字符串及其(可改为不及其)后该行的内容:");
-        label5_4 = new JLabel("清空时保留该字符串:");
-        label5_5 = new JLabel("清理更新信息(优先级更高):");
+        label5_5 = new JLabel("清空时保留该字符串:");
+        label5_6 = new JLabel("清理更新信息(优先级更高):");
+        label5_4 = new JLabel("*(此项可为空)  操作行数:");
+        label5_4_des = new JLabel("用\"数字\"或是\"数字-数字\"的形式表示,中间以英文逗号分隔,为空代表操作所有行");
         label6_1 = new JLabel("参考用英文文本en_US.lang:");
         label6_2 = new JLabel("半成品中文文本zh_CN.lang:");
         label6_3 = new JLabel("待操作的半成品中文文本zh_CN.lang:");
@@ -304,6 +308,7 @@ public class MainFrame extends JFrame implements ActionListener {
         textField5_1 = new JTextField(40);
         textField5_2 = new JTextField(40);
         textField5_3 = new JTextField(40);
+        textField5_4 = new JTextField(40);
         textField6_1 = new JTextField(40);
         textField6_2 = new JTextField(40);
         textField6_3 = new JTextField(40);
@@ -467,14 +472,18 @@ public class MainFrame extends JFrame implements ActionListener {
         panel5_3.add(textField5_3);
         panel5.add(panel5_4);
         panel5_4.add(label5_4);
-        panel5_4.add(Box.createHorizontalStrut(30));
-        panel5_4.add(checkBox5_4);
+        panel5_4.add(label5_4_des);
+        panel5_4.add(textField5_4);
         panel5.add(panel5_5);
         panel5_5.add(label5_5);
-        panel5_5.add(checkBox5_5);
+        panel5_5.add(Box.createHorizontalStrut(30));
+        panel5_5.add(checkBox5_4);
         panel5.add(panel5_6);
-        panel5_6.add(button5_go);
-        panel5.add(Box.createVerticalStrut(170));
+        panel5_6.add(label5_6);
+        panel5_6.add(checkBox5_5);
+        panel5.add(panel5_7);
+        panel5_7.add(button5_go);
+        panel5.add(Box.createVerticalStrut(100));
         // Sixth Main Panel
         panel6.setLayout(new BoxLayout(panel6, BoxLayout.Y_AXIS));
         panel6.add(panel6_1);
@@ -745,14 +754,20 @@ public class MainFrame extends JFrame implements ActionListener {
                 String sRemoveFlag = textField5_3.getText();
                 int flag1 = checkBox5_4.isSelected() ? 1 : 0;
                 int flag2 = checkBox5_5.isSelected() ? 1 : 0;
-                if (!textField5_1.getText().isEmpty())
-                    if (!textField5_1.getText().equals(textField5_2.getText())
-                            || JOptionPane.showOptionDialog(null, "系统检测到您的输入和输出是同一个文件，这样可能会导致数据丢失，请问是否继续？", "确认是否继续",
-                                    JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null) == 0) {
-                        FileModifier fileModifier = new FileModifier(this, fileInput1, fileOutput, sRemoveFlag,
-                                flag1 * 10 + flag2);
-                        fileModifier.functionConditionalRemove();
-                    }
+                if (textField5_4.getText().indexOf("，") == -1) {
+                    String[] rowNumberSplit = { "Blank" };
+                    if (!textField5_4.getText().trim().equals(""))
+                        rowNumberSplit = textField5_4.getText().split(",");
+                    if (!textField5_1.getText().isEmpty())
+                        if (!textField5_1.getText().equals(textField5_2.getText())
+                                || JOptionPane.showOptionDialog(null, "系统检测到您的输入和输出是同一个文件，这样可能会导致数据丢失，请问是否继续？", "确认是否继续",
+                                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, null, null) == 0) {
+                            FileModifier fileModifier = new FileModifier(this, fileInput1, fileOutput, sRemoveFlag,
+                                    rowNumberSplit, flag1 * 10 + flag2);
+                            fileModifier.functionConditionalRemove();
+                        }
+                } else
+                	new MessageWindow(this, "错误！", "错误,请使用英文逗号分隔！", -1);
             } else if (e.getSource() == button6_go) {
                 String fileInput1 = textField6_1.getText();
                 String fileInput2 = textField6_2.getText();
