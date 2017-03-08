@@ -483,7 +483,7 @@ public class MainFrame extends JFrame implements ActionListener {
         panel5_6.add(checkBox5_5);
         panel5.add(panel5_7);
         panel5_7.add(button5_go);
-        panel5.add(Box.createVerticalStrut(100));
+        panel5.add(Box.createVerticalStrut(60));
         // Sixth Main Panel
         panel6.setLayout(new BoxLayout(panel6, BoxLayout.Y_AXIS));
         panel6.add(panel6_1);
